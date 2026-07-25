@@ -1,18 +1,18 @@
-# 🚀 Antigravity Agent Skills Repository
+# 🚀 Skills Repository
 
-Repositório de **Skills** customizadas para o assistente IA **Antigravity (Google DeepMind)**.
+Repositório de **Skills** customizadas para assistentes de IA.
 
 ## 🛠️ Skills Disponíveis
 
 | Skill | Descrição |
 | :--- | :--- |
-| [**`tts-html-builder`**](./skills/tts-html-builder/SKILL.md) | Converte resumos, artigos e documentos em páginas HTML limpas e elegantes otimizadas para sintetizadores de voz (TTS), contendo player nativo (Web Speech API) com botões de ouvir/pausar, avançar/voltar parágrafo, velocidade (0.5x-3.0x), seleção de voz e destaque visual sincronizado sem descompasso. |
+| [**`tts-html-builder`**](./skills/tts-html-builder/SKILL.md) | Converte resumos, artigos e documentos em páginas HTML ou arquivos Quarto (.qmd) limpos e elegantes otimizados para leitor de voz (TTS), contendo player nativo (Web Speech API) com botões de ouvir/pausar, avançar/voltar parágrafo, velocidade (0.5x-3.0x), seleção de voz e destaque visual sincronizado sem descompasso. |
 
 ---
 
-## 💻 Como Instalar/Usar no Antigravity
+## 💻 Como Instalar/Usar
 
-Para usar as skills deste repositório no seu Antigravity local, clone ou copie a pasta de qualquer skill para o seu diretório de configurações globais:
+Para usar as skills deste repositório no seu ambiente local, clone ou copie a pasta de qualquer skill para o seu diretório de configurações globais:
 
 ```bash
 # Pasta Global de Skills no Windows:
