@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}}</title>
+    <meta name="description" content="{{DESCRIPTION}}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --accent-bg: rgba(56, 189, 248, 0.1);
+            --highlight: rgba(56, 189, 248, 0.25);
+            --border: #334155;
+            --radius: 12px;
+            --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-body: 'Lora', Georgia, serif;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --accent: #0284c7;
+            --accent-hover: #0369a1;
+            --accent-bg: rgba(2, 132, 199, 0.08);
+            --highlight: rgba(2, 132, 199, 0.2);
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1.125rem;
+            line-height: 1.8;
+            padding-bottom: 5rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .tts-player {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            padding: 0.85rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .player-container {
+            max-width: 920px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .player-controls { display: flex; align-items: center; gap: 0.5rem; }
+
+        .btn {
+            background-color: var(--accent);
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn:hover { background-color: var(--accent-hover); }
+        .btn:active { transform: scale(0.98); }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-bg);
+            border-color: var(--accent);
+        }
+
+        .player-settings {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        select {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.65rem;
+            border-radius: 6px;
+            font-family: var(--font-heading);
+            font-size: 0.875rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .article-container {
+            max-width: 860px;
+            margin: 2.5rem auto 0;
+            padding: 0 1.5rem;
+        }
+
+        header.article-header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2rem;
+        }
+
+        .article-tag {
+            font-family: var(--font-heading);
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 2.3rem;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-family: var(--font-heading);
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1rem;
+            color: var(--accent);
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.8rem 0 0.75rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 1.4rem;
+            text-align: justify;
+            text-justify: inter-word;
+            border-radius: 6px;
+            padding: 0.3rem 0.6rem;
+            transition: background-color 0.2s ease;
+        }
+
+        ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; padding-left: 0.2rem; }
+
+        .speaking-highlight {
+            background-color: var(--highlight) !important;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.8rem !important;
+        }
+
+        .causal-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.3rem; }
+            body { font-size: 1rem; }
+            .player-container { flex-direction: column; align-items: stretch; }
+            .player-controls { justify-content: center; flex-wrap: wrap; }
+            .player-settings { justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tts-player" role="region" aria-label="Controles de Áudio">
+        <div class="player-container">
+            <div class="player-controls">
+                <button class="btn btn-secondary" onclick="prevParagraph()" aria-label="Voltar Trecho">⏮ Voltar</button>
+                <button id="btnPlay" class="btn" onclick="togglePlayPause()" aria-label="Ouvir ou Pausar"><span id="playIcon">▶</span> <span id="playText">Ouvir</span></button>
+                <button class="btn btn-secondary" onclick="nextParagraph()" aria-label="Avançar Trecho">Avançar ⏭</button>
+                <button id="btnStop" class="btn btn-secondary" onclick="stopSpeech()" aria-label="Parar">⏹ Parar</button>
+            </div>
+
+            <div class="player-settings">
+                <label for="speedSelect">Velocidade:
+                    <select id="speedSelect" onchange="changeRate()">
+                        <option value="0.5">0.5x</option>
+                        <option value="0.75">0.75x</option>
+                        <option value="0.85">0.85x</option>
+                        <option value="1" selected>1.0x (Normal)</option>
+                        <option value="1.15">1.15x</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.35">1.35x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="1.75">1.75x</option>
+                        <option value="2.0">2.0x</option>
+                        <option value="2.5">2.5x</option>
+                        <option value="3.0">3.0x</option>
+                    </select>
+                </label>
+                <label for="voiceSelect">Voz:
+                    <select id="voiceSelect" onchange="changeVoice()">
+                        <option value="">Padrão do Sistema</option>
+                    </select>
+                </label>
+                <button class="btn btn-secondary" onclick="toggleTheme()" aria-label="Alternar Tema" style="padding: 0.4rem 0.7rem;">🌗</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="article-container" id="speakableContent">
+        <!-- Conteúdo do artigo injetado aqui -->
+        {{BODY_CONTENT}}
+    </main>
+
+    <script>
+        let synth = window.speechSynthesis;
+        let activeUtterance = null;
+        let isSpeaking = false;
+        let isPaused = false;
+        let paragraphs = [];
+        let currentParagraphIndex = 0;
+        let voices = [];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            populateVoiceList();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = populateVoiceList;
+            }
+            const container = document.getElementById('speakableContent');
+            paragraphs = Array.from(container.querySelectorAll('h1, h2, h3, p, li, .causal-box'));
+        });
+
+        function populateVoiceList() {
+            voices = synth.getVoices().filter(v => v.lang.startsWith('pt'));
+            const voiceSelect = document.getElementById('voiceSelect');
+            voiceSelect.innerHTML = '<option value="">Padrão do Sistema (PT)</option>';
+            if (voices.length === 0) voices = synth.getVoices();
+
+            voices.forEach((voice, index) => {
+                const option = document.createElement('option');
+                option.textContent = `${voice.name} (${voice.lang})`;
+                option.value = index;
+                if (voice.lang.includes('pt-BR') || voice.lang.includes('pt')) option.selected = true;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        function togglePlayPause() {
+            if (!synth) return;
+            if (isSpeaking && !isPaused) {
+                synth.pause();
+                isPaused = true;
+                updateButtonState('pause');
+            } else if (isPaused) {
+                synth.resume();
+                isPaused = false;
+                updateButtonState('play');
+            } else {
+                startSpeechFrom(currentParagraphIndex);
+            }
+        }
+
+        function prevParagraph() { startSpeechFrom(Math.max(0, currentParagraphIndex - 1)); }
+        function nextParagraph() { startSpeechFrom(Math.min(paragraphs.length - 1, currentParagraphIndex + 1)); }
+
+        function startSpeechFrom(index) {
+            stopSpeech(false);
+            if (index >= paragraphs.length) {
+                currentParagraphIndex = 0;
+                updateButtonState('stop');
+                return;
+            }
+            currentParagraphIndex = index;
+            speakParagraph(currentParagraphIndex);
+        }
+
+        function speakParagraph(index) {
+            if (index >= paragraphs.length) { stopSpeech(); return; }
+
+            const currentEl = paragraphs[index];
+            const textToSpeak = currentEl.innerText || currentEl.textContent;
+            
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            activeUtterance = utterance;
+            utterance.lang = 'pt-BR';
+            
+            const selectedVoiceIndex = document.getElementById('voiceSelect').value;
+            if (selectedVoiceIndex !== "" && voices[selectedVoiceIndex]) {
+                utterance.voice = voices[selectedVoiceIndex];
+            }
+
+            utterance.rate = parseFloat(document.getElementById('speedSelect').value);
+
+            utterance.onstart = () => {
+                if (currentParagraphIndex === index) {
+                    removeHighlights();
+                    currentEl.classList.add('speaking-highlight');
+                    currentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            };
+
+            utterance.onend = () => {
+                if (!isSpeaking || isPaused || currentParagraphIndex !== index) return;
+                currentParagraphIndex++;
+                if (currentParagraphIndex < paragraphs.length) speakParagraph(currentParagraphIndex);
+                else stopSpeech();
+            };
+
+            utterance.onerror = (e) => {
+                if (isSpeaking && currentParagraphIndex === index) {
+                    currentParagraphIndex++;
+                    if (currentParagraphIndex < paragraphs.length) speakParagraph(currentParagraphIndex);
+                    else stopSpeech();
+                }
+            };
+
+            isSpeaking = true;
+            isPaused = false;
+            updateButtonState('play');
+            synth.speak(utterance);
+        }
+
+        function stopSpeech(resetIndex = true) {
+            isSpeaking = false;
+            isPaused = false;
+            if (synth) synth.cancel();
+            activeUtterance = null;
+            removeHighlights();
+            if (resetIndex) currentParagraphIndex = 0;
+            updateButtonState('stop');
+        }
+
+        function removeHighlights() {
+            paragraphs.forEach(el => el.classList.remove('speaking-highlight'));
+        }
+
+        function updateButtonState(state) {
+            const btnPlay = document.getElementById('btnPlay');
+            const playIcon = document.getElementById('playIcon');
+            const playText = document.getElementById('playText');
+            if (state === 'play') {
+                playIcon.textContent = '⏸'; playText.textContent = 'Pausar';
+                btnPlay.style.backgroundColor = '#e11d48';
+            } else if (state === 'pause') {
+                playIcon.textContent = '▶'; playText.textContent = 'Continuar';
+                btnPlay.style.backgroundColor = 'var(--accent)';
+            } else {
+                playIcon.textContent = '▶'; playText.textContent = 'Ouvir';
+                btnPlay.style.backgroundColor = 'var(--accent)';
+            }
+        }
+
+        function changeRate() { if (isSpeaking && !isPaused) startSpeechFrom(currentParagraphIndex); }
+        function changeVoice() { if (isSpeaking && !isPaused) startSpeechFrom(currentParagraphIndex); }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'light') document.documentElement.removeAttribute('data-theme');
+            else document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+</body>
+</html>
