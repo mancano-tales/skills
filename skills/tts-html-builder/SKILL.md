@@ -1,36 +1,98 @@
 ---
 name: tts-html-builder
-description: Converte resumos, artigos e documentos em páginas HTML limpas e elegantes otimizadas para leitor de voz (TTS - Text to Speech), contendo player interativo nativo (Web Speech API) com botões de ouvir/pausar, avançar/voltar parágrafo, velocidade ajustável (0.5x a 3.0x), seleção de vozes e grifo visual sincronizado em tempo real. Ative quando o usuário solicitar HTML para sintetizador de voz ou leitura audível.
+description: Converte resumos, artigos e documentos em páginas HTML ou arquivos Quarto (.qmd) limpos e elegantes otimizados para leitor de voz (TTS - Text to Speech), contendo player interativo nativo (Web Speech API) com botões de ouvir/pausar, avançar/voltar parágrafo, velocidade ajustável (0.5x a 3.0x), seleção de vozes e grifo visual sincronizado em tempo real. Ative quando o usuário solicitar HTML ou Quarto (.qmd) para sintetizador de voz ou leitura audível.
 ---
 
-# TTS HTML Builder: Guia de Criação de Documentos Audíveis
+# TTS HTML & Quarto Builder: Guia de Criação de Documentos Audíveis
 
-Esta skill orienta a transformação de qualquer texto, artigo ou resumo acadêmico em um documento HTML limpo, responsivo e perfeitamente otimizado para leitura por sintetizadores de voz (**TTS - Text to Speech**).
+Esta skill orienta a transformação de qualquer texto, artigo ou resumo acadêmico em páginas **HTML estáticas** ou documentos **Quarto (`.qmd`)** limpos, responsivos e perfeitamente otimizados para leitura por sintetizadores de voz (**TTS - Text to Speech**).
+
+---
 
 ## 1. Regras de Limpeza de Texto para Sintetizadores de Voz
 
 Ao preparar um texto para TTS, aplique rigorosamente as seguintes transformações no conteúdo:
 
 1. **Remoção de Citações Repetitivas no Corpo:** 
-   - Remova citações entre parênteses como `(Treiman 1970)` ou `[1]` do meio das frases. Preserve referências apenas no rodapé (`<footer>`).
+   - Remova citações entre parênteses como `(Treiman 1970)` ou `[1]` do meio das frases. Preserve referências apenas no rodapé (`<footer>` ou fim do documento).
 2. **Conversão de Fórmulas e Notações Matemáticas:**
    - Converta notações LaTeX ou esquemas com setas (`A -> B -> C`) em frases narrativas fluidas em português (ex: *"A industrialização impulsiona a transformação da estrutura..."*).
 3. **Remoção de Metadados e Marcadores Internos:**
    - Remova marcadores como `[Extracting: ...]`, delimitadores de código ou formatações Markdown que seriam lidas literalmente por um sintetizador.
 4. **Estruturação Semântica Limpa:**
-   - Utilize elementos HTML5 semânticos (`<h1>`, `<h2>`, `<h3>`, `<p>`, `<ul>`, `<li>`). Evite colocar símbolos soltos de travessão ou asteriscos no início das linhas.
+   - Utilize elementos HTML5 ou Markdown limpos (`<h1>`, `<h2>`, `<h3>`, `<p>`, `<ul>`, `<li>` / `#`, `##`, `-`).
 
 ---
 
-## 2. Estrutura do Player de Voz Nativo (Web Speech API)
+## 2. Suporte Duplo: Arquivos HTML Estáticos vs. Quarto (`.qmd`)
 
-Todo documento gerado deve incluir o player interativo sticky no topo com os seguintes recursos:
+O agente deve gerar o formato ideal dependendo do contexto da solicitação:
 
-### Recursos do Player:
-- **Controles de Leitura:** Botões para `⏮ Voltar`, `▶ Ouvir / ⏸ Pausar`, `Avançar ⏭` e `⏹ Parar`.
-- **Faixa Extensa de Velocidade:** Opções no `<select>` variando de `0.5x` a `3.0x`.
-- **Seleção de Vozes Nativas:** Lista dinâmica populada via `window.speechSynthesis.getVoices()` filtrando vozes em português (`pt-BR`).
-- **Alternador de Tema:** Botão para comutar entre Dark Mode (padrão) e Light Mode.
+### Modo A: Documentos Quarto (`.qmd`) — Recomendado para Sites/Quarto Projects
+Em projetos Quarto, estruture o arquivo com YAML frontmatter, blocos nativos de Callout (`::: {.callout-note}`) e embute o player e o script usando ````{=html}`:
+
+```markdown
+---
+title: "Título do Artigo"
+subtitle: "Subtítulo explicativo"
+author: "Autor"
+date: "2026-07-25"
+format:
+  html:
+    toc: true
+---
+
+```{=html}
+<div class="tts-player" role="region" aria-label="Controles de Áudio">
+    <div class="player-container">
+        <div class="player-controls">
+            <button class="tts-btn tts-btn-secondary" onclick="prevParagraph()">⏮ Voltar</button>
+            <button id="btnPlay" class="tts-btn" onclick="togglePlayPause()"><span id="playIcon">▶</span> <span id="playText">Ouvir Texto</span></button>
+            <button class="tts-btn tts-btn-secondary" onclick="nextParagraph()">Avançar ⏭</button>
+            <button id="btnStop" class="tts-btn tts-btn-secondary" onclick="stopSpeech()">⏹ Parar</button>
+        </div>
+        <div class="tts-settings">
+            <label for="speedSelect">Velocidade:
+                <select id="speedSelect" class="tts-select" onchange="changeRate()">
+                    <option value="0.5">0.5x</option>
+                    <option value="0.75">0.75x</option>
+                    <option value="0.85">0.85x</option>
+                    <option value="1" selected>1.0x (Normal)</option>
+                    <option value="1.15">1.15x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.35">1.35x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="1.75">1.75x</option>
+                    <option value="2.0">2.0x</option>
+                    <option value="2.5">2.5x</option>
+                    <option value="3.0">3.0x</option>
+                </select>
+            </label>
+            <label for="voiceSelect">Voz:
+                <select id="voiceSelect" class="tts-select" onchange="changeVoice()">
+                    <option value="">Padrão do Sistema</option>
+                </select>
+            </label>
+        </div>
+    </div>
+</div>
+```
+
+<div id="speakableContent">
+
+## Conteúdo do Artigo em Markdown...
+
+</div>
+
+```{=html}
+<script>
+// Código de controle TTS estrito
+</script>
+```
+```
+
+### Modo B: Arquivos HTML Estáticos Autônomos (`.html`)
+Gere o arquivo HTML completo com CSS embutido, player sticky e script.
 
 ---
 
@@ -54,7 +116,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     
     const container = document.getElementById('speakableContent');
-    paragraphs = Array.from(container.querySelectorAll('h1, h2, h3, p, li, .causal-box'));
+    paragraphs = Array.from(container.querySelectorAll('h1, h2, h3, p, li, .causal-box, .callout'));
 });
 
 function populateVoiceList() {
@@ -191,11 +253,11 @@ function updateButtonState(state) {
     } else if (state === 'pause') {
         playIcon.textContent = '▶';
         playText.textContent = 'Continuar';
-        btnPlay.style.backgroundColor = 'var(--accent)';
+        btnPlay.style.backgroundColor = '#2563eb';
     } else {
         playIcon.textContent = '▶';
         playText.textContent = 'Ouvir';
-        btnPlay.style.backgroundColor = 'var(--accent)';
+        btnPlay.style.backgroundColor = '#2563eb';
     }
 }
 
@@ -206,21 +268,4 @@ function changeRate() {
 function changeVoice() {
     if (isSpeaking && !isPaused) startSpeechFrom(currentParagraphIndex);
 }
-
-function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    if (currentTheme === 'light') {
-        document.documentElement.removeAttribute('data-theme');
-    } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-    }
-}
 ```
-
----
-
-## 4. Requisitos de Estilo CSS
-
-- Usar `--highlight: rgba(56, 189, 248, 0.25);` com borda lateral de destaque (`border-left: 4px solid var(--accent);`).
-- Garantir transição suave (`transition: background-color 0.2s ease`).
-- Manter o player fixo (`position: sticky; top: 0; z-index: 100`).
