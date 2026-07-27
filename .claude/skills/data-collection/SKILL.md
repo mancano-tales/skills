@@ -1,4 +1,4 @@
----
+﻿---
 name: data-collection
 description: "Coleta estruturada de dados online: descoberta de fontes, download via API/bulk/scraping, gestão de credenciais, documentação rastreável e reproduzível. Use quando o usuário precisar baixar dados, montar pipeline de coleta, achar bases de dados sobre um tema, configurar acesso a APIs governamentais ou acadêmicas, ou organizar dados brutos de forma auditável — mesmo que não diga explicitamente 'coleta de dados'."
 argument-hint: "[tema, fonte ou URL dos dados]"
@@ -290,7 +290,7 @@ Ver detalhes completos em `docs/SOURCES.yaml`.
 ## Última coleta
 
 Data: YYYY-MM-DD
-Autor: [nome]
+autor: "Manoel Galdino (mgaldino/agents-workflow)"
 ```
 
 ### 10. Pacotes Python comuns
@@ -324,3 +324,4 @@ Antes de declarar a coleta completa, verifique:
 - [ ] `COLLECTION_LOG.md` documenta gaps, problemas e completude da coleta
 - [ ] README.md tem instruções completas de reprodução
 - [ ] Licenças de uso permitem o uso pretendido
+

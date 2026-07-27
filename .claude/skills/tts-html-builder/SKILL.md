@@ -1,4 +1,5 @@
----
+﻿---
+autor: "Tales Mançano / Ecossistema"
 name: tts-html-builder
 description: Converte resumos, artigos e documentos em páginas HTML ou arquivos Quarto (.qmd) limpos e elegantes otimizados para leitor de voz (TTS - Text to Speech), contendo player interativo nativo (Web Speech API) com botões de ouvir/pausar, avançar/voltar parágrafo, velocidade ajustável (0.5x a 3.0x), seleção de vozes e grifo visual sincronizado em tempo real. Ative quando o usuário solicitar HTML ou Quarto (.qmd) para sintetizador de voz ou leitura audível.
 ---
@@ -269,3 +270,4 @@ function changeVoice() {
     if (isSpeaking && !isPaused) startSpeechFrom(currentParagraphIndex);
 }
 ```
+

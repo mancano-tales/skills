@@ -1,4 +1,5 @@
----
+﻿---
+autor: "Tales Mançano / Ecossistema"
 name: sync-skills
 description: SOP para trazer skills de governança atualizadas do repositório mãe (agentic-research-template) para este projeto, ou para promover uma skill melhorada/nova deste projeto de volta para a mãe. Roda tools/sync-skills.ps1/.sh em modo relatório primeiro, pede confirmação item a item antes de aplicar qualquer mudança, e nunca commita automaticamente.
 ---
@@ -39,3 +40,4 @@ Não é automatizado por bom motivo: decidir se uma skill é genérica o bastant
 ## 3. Configuração de fonte não-padrão
 
 Se este projeto não estiver como pasta irmã de `agentic-research-template` (layout diferente de máquina, clone em outro lugar), crie `tools/.skills-source` com o caminho absoluto ou relativo do repositório mãe, uma linha só, sem aspas.
+

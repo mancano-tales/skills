@@ -2,6 +2,19 @@
 
 Este arquivo documenta as mudanças importantes na estrutura, adiantamento de skills e convenções de governança do repositório `skills`.
 
+## 2026-07-27 15:30 — Auditoria Adversarial Zero-Trust, Padronização de Frontmatter e Catálogo de 101 Skills
+
+* **Auditoria de Subagentes**: Concluída a auditoria adversarial mecânica com 12 subagentes (incluindo o modelo Pro em modo zero-trust).
+* **Consolidação do Catálogo (101 Skills)**: Todas as 101 skills físicas presentes em `.claude/skills` foram catalogadas e ordenadas por autor no [`README.md`](file:///c:/Users/Mancano/Documents/MancanoSync/skills/README.md) (42 Galdino, 37 Pocock, 15 Anthropic, 7 Mançano/Ecossistema).
+* **Padronização de Autoria**: Inserido o campo `autor: "Tales Mançano / Ecossistema"` no YAML frontmatter de todas as skills de governança que omitiam a chave (`close-task`, `export-conversation`, `git-cleanup`, `request-audit`, `sync-skills`, `tts-html-builder`, `pdf-text-extractor`), e corrigido o autor de `data-collection`.
+* **Espelhamento Global Tríplice**: Re-sincronizadas 100% das 101 skills para `C:\Users\Mancano\.claude\skills\` e `C:\Users\Mancano\.gemini\config\skills\` (paridade de hash verificada com 0 divergências).
+
+**Metadados de Execução**:
+- **Data/Hora**: 2026-07-27 15:30 (Horário Local)
+- **Agente**: Antigravity / Gemini 3.6 Flash (High) / Antigravity IDE
+- **Mensagem do Commit**: "fix(skills): padroniza autor em 101 skills, atualiza catalogo do README e alinha governanca"
+- **Arquivos afetados**: `.claude/skills/`, `README.md`, `NEWS.md`
+
 ## 2026-07-27 14:53 — Importação do Pacote Superpowers & Plugins Oficiais da Anthropic
 
 * **Importação & Atribuição de Autoria**: Incorporadas as 14 skills do pacote oficial **`superpowers`** (Anthropic v5.1.0) e plugins oficiais de desenvolvimento (`frontend-design`, `build-mcp-server`, `claude-md-improver`) no repositório [`skills`](file:///c:/Users/Mancano/Documents/MancanoSync/skills).
