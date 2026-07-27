@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# post-merge — Git Hook para verificar status de skills após git pull / merge
+# ==============================================================================
+echo "🔄 [Git Hook post-merge] Verificando sincronização de skills de governança..."
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if command -v pwsh >/dev/null 2>&1; then
+    pwsh -ExecutionPolicy Bypass -File "$REPO_ROOT/tools/sync-skills.ps1"
+elif command -v powershell.exe >/dev/null 2>&1; then
+    powershell.exe -ExecutionPolicy Bypass -File "$REPO_ROOT/tools/sync-skills.ps1"
+elif [[ -f "$REPO_ROOT/tools/sync-skills.sh" ]]; then
+    bash "$REPO_ROOT/tools/sync-skills.sh"
+fi

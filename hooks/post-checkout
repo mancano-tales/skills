@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# post-checkout — Git Hook para verificar status de skills após troca de branch
+# ==============================================================================
+# Argumento 3 indica troca de branch (1) ou checkout de arquivo (0)
+if [[ "${3:-1}" -eq 1 ]]; then
+    echo "🔄 [Git Hook post-checkout] Verificando sincronização de skills..."
+    REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+    if command -v pwsh >/dev/null 2>&1; then
+        pwsh -ExecutionPolicy Bypass -File "$REPO_ROOT/tools/sync-skills.ps1"
+    elif command -v powershell.exe >/dev/null 2>&1; then
+        powershell.exe -ExecutionPolicy Bypass -File "$REPO_ROOT/tools/sync-skills.ps1"
+    elif [[ -f "$REPO_ROOT/tools/sync-skills.sh" ]]; then
+        bash "$REPO_ROOT/tools/sync-skills.sh"
+    fi
+fi

@@ -1,0 +1,26 @@
+# ==============================================================================
+# .gitignore — Repositório de Skills
+# ==============================================================================
+
+# Ignorar o atalho local das IAs (.agents -> .claude) para evitar rastreamento duplicado
+/.agents/
+
+# Sistema Operacional / Editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.obsidian/
+.vscode/
+*~
+*.swp
+*.swo
+
+# Python / R
+__pycache__/
+*.pyc
+.Rproj.user/
+.Rhistory
+.RData
+
+# Backups temporários gerados por auto-sincronização
+*.bak.*
