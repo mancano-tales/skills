@@ -24,7 +24,7 @@
 - **Proibições Estritas (Standing Prohibitions)**:
   - Nunca execute `git add .` ou `git add -A`. Apenas adicione os arquivos específicos modificados (`git add <file>`).
   - Nunca edite manualmente arquivos gerenciados externamente sem registrar no `NEWS.md`.
-  - Nunca quebre os hard links físicos (`AGENTS.md` ≡ `CLAUDE.md`, `.github/copilot-instructions.md` ≡ `CLAUDE.md`).
+  - Nunca quebre os hard links físicos (`AGENTS.md` ≡ `CLAUDE.md`, `.github/copilot-instructions.md` ≡ `CLAUDE.md`). **Regra sobre Hard Links**: Agentes de IA **NÃO devem perder tempo** testando, auditando ou recriando hard links manualmente (`mklink`). O script de auto-cura automatizado (`validate-governance.R` / `setup`) cuida disso sozinho. Foque estritamente no objetivo principal da tarefa.
 - **Planos ativos**: consulte o índice de status em `0-meta/plan/README.md`.
 
 ---
