@@ -19,20 +19,20 @@
   - `skills/`: Diretório contendo skills autorais customizadas (ex.: `tts-html-builder`).
   - `.claude/skills/`: Diretório de skills ativas de governança e ferramentas (11 skills compartilhadas da matriz `agentic-research-template`).
   - `.agents`: Junction NTFS / Symlink apontando fisicamente para `.claude` (garante que IAs que buscam `.agents` acessem as mesmas skills sem duplicação de dados).
-  - `0-governance/`: Scaffold de governança (`0-governance/plan/` para planos, `0-governance/llm-reviews/` para auditorias de conversas).
+  - `0-meta/`: Scaffold de governança (`0-meta/plan/` para planos, `0-meta/llm-reviews/` para auditorias de conversas).
   - `tools/`: Scripts de sincronização (`sync-skills.ps1`/`.sh`), exportação (`export_conversa.R`) e validação (`validate-governance.R`).
   - `hooks/`: Git Hooks (`post-merge`, `post-checkout`) para verificação automática de sincronização em segundo plano.
 - **Proibições Estritas (Standing Prohibitions)**:
   - Nunca execute `git add .` ou `git add -A`. Apenas adicione os arquivos específicos modificados (`git add <file>`).
   - Nunca edite manualmente arquivos gerenciados externamente sem registrar no `NEWS.md`.
-  - Nunca quebre os hard links físicos (`AGENTS.md` ≡ `CLAUDE.md`, `.github/copilot-instructions.md` ≡ `CLAUDE.md`).- **Planos ativos**: consulte o índice de status em `0-governance/plan/README.md`.
+  - Nunca quebre os hard links físicos (`AGENTS.md` ≡ `CLAUDE.md`, `.github/copilot-instructions.md` ≡ `CLAUDE.md`).- **Planos ativos**: consulte o índice de status em `0-meta/plan/README.md`.
 
 ---
 
 ## Guidance Documents: Map and Precedence Rules
 
 **Regras de Precedência:**
-1. Em caso de conflito, a seção "Current State" acima + o plano ativo em `0-governance/plan/` correspondente prevalecem sobre qualquer outro documento.
+1. Em caso de conflito, a seção "Current State" acima + o plano ativo em `0-meta/plan/` correspondente prevalecem sobre qualquer outro documento.
 2. Arquivos marcados com banner de desatualização/arquivamento são mantidos apenas para histórico.
 
 | Documento | Público | Função | Quando Atualizar |
@@ -41,7 +41,7 @@
 | `TODO.md` | Ambos | Log append-only de tarefas (Pendente/Prospectivo/Concluído) | A cada tarefa |
 | `README.md` | Humanos | Apresentação do repositório, guia de uso e lista de skills | Adição de skill |
 | `NEWS.md` | Ambos | Registro intelectual de alterações | A cada commit |
-| `0-governance/plan/README.md` | Ambos | Índice de status dos planos | Criação ou mudança de status |
+| `0-meta/plan/README.md` | Ambos | Índice de status dos planos | Criação ou mudança de status |
 
 ---
 
@@ -64,9 +64,8 @@
 
 | Chave | Usada por | Valor neste repositório |
 |---|---|---|
-| `diretorio_governanca` | todas as skills | `0-governance/` |
+| `diretorio_governanca` | todas as skills | `0-meta/` |
 | `diretorio_autoria_primaria` | `close-task`, `git-cleanup` | `skills/` |
 | `script_exportar_conversa` | `close-task`, `export-conversation` | `tools/export_conversa.R` |
-| `diretorios_trabalho_continuo` | `git-cleanup` | `0-governance/plan/` |
-
+| `diretorios_trabalho_continuo` | `git-cleanup` | `0-meta/plan/` |
 
