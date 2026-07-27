@@ -1,6 +1,7 @@
-# CLAUDE.md — Skills (Repositório de Skills Agênticas)
+﻿# CLAUDE.md — Skills (Repositório de Skills Agênticas)
 
 > 🚨 **CRITICAL AGENT RULES (COVENANT) — READ FIRST:**
+> - **HARD LINK RULE:** AI Agents **MUST NOT waste time** testing, auditing, or manually recreating hard links (mklink). Automated governance scripts (alidate-governance.R / setup) handle this automatically in the background. Focus strictly on your primary task.
 > - **RULE 1:** You are operating under the **Agent Covenant** framework. Every commit is audited. Run `Rscript tools/validate-governance.R` to test your edits before committing.
 > - **RULE 2:** Any modification in main files REQUIRES an update in the root `NEWS.md` file in the same commit.
 > - **RULE 3:** When completing a task or plan, you MUST run the conversation exporter to save your session log (`Rscript tools/export_conversa.R <session_uuid> [slug]`).
@@ -24,8 +25,7 @@
 - **Proibições Estritas (Standing Prohibitions)**:
   - Nunca execute `git add .` ou `git add -A`. Apenas adicione os arquivos específicos modificados (`git add <file>`).
   - Nunca edite manualmente arquivos gerenciados externamente sem registrar no `NEWS.md`.
-  - Nunca quebre os hard links físicos (`AGENTS.md` ≡ `CLAUDE.md`, `.github/copilot-instructions.md` ≡ `CLAUDE.md`). **Regra sobre Hard Links**: Agentes de IA **NÃO devem perder tempo** testando, auditando ou recriando hard links manualmente (`mklink`). O script de auto-cura automatizado (`validate-governance.R` / `setup`) cuida disso sozinho. Foque estritamente no objetivo principal da tarefa.
-- **Planos ativos**: consulte o índice de status em `0-meta/plan/README.md`.
+  - Nunca quebre os hard links físicos (`AGENTS.md` ≡ `CLAUDE.md`, `.github/copilot-instructions.md` ≡ `CLAUDE.md`).- **Planos ativos**: consulte o índice de status em `0-meta/plan/README.md`.
 
 ---
 
@@ -68,3 +68,4 @@
 | `diretorio_autoria_primaria` | `close-task`, `git-cleanup` | `skills/` |
 | `script_exportar_conversa` | `close-task`, `export-conversation` | `tools/export_conversa.R` |
 | `diretorios_trabalho_continuo` | `git-cleanup` | `0-meta/plan/` |
+
