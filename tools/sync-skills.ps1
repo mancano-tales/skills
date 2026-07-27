@@ -45,6 +45,7 @@ function Resolve-SkillsSource {
 function Get-FolderHash {
     param([string]$FolderPath)
     if (-not (Test-Path -Path $FolderPath -PathType Container)) { return $null }
+    $FolderPath = [System.IO.Path]::GetFullPath($FolderPath)
     $files = Get-ChildItem -Path $FolderPath -Recurse -File | Sort-Object FullName
     if ($files.Count -eq 0) { return $null }
     $combined = ($files | ForEach-Object {
