@@ -2,13 +2,36 @@
 
 Repositório central de **Skills customizadas** e de governança para assistentes de IA (Antigravity, Claude Code, OpenAI, Gemini).
 
-Contém a coleção completa de skills autorais de **Tales Mançano**, skills acadêmicas de **Manoel Galdino** (`mgaldino/agents-workflow`), skills de engenharia/produtividade de **Matt Pocock** (`mattpocock/skills`) e skills de governança do ecossistema `MancanoSync`.
+Contém a coleção completa de skills autorais de **Tales Mançano**, a suíte de superpotências da **Anthropic** (`superpowers`), skills acadêmicas de **Manoel Galdino** (`mgaldino/agents-workflow`), skills de engenharia de **Matt Pocock** (`mattpocock/skills`) e a rede de governança do ecossistema `MancanoSync`.
 
 ---
 
-## 🛠️ Catálogo Completo de Skills
+## 🛠️ Catálogo Completo de Skills (100+ Skills)
 
-### 🎓 1. Pesquisa, Ciência Política & Redação Acadêmica (Manoel Galdino)
+### ⚡ 1. Superpotências & Workflows de Agentes (Anthropic / superpowers)
+
+| Skill | Descrição | Autor |
+| :--- | :--- | :--- |
+| [**`using-superpowers`**](./.claude/skills/using-superpowers/SKILL.md) | Guia de inicialização e orquestração de superpotências de IA | Anthropic (superpowers) |
+| [**`brainstorming`**](./.claude/skills/brainstorming/SKILL.md) | Brainstorming estruturado antes de implementar novas funcionalidades | Anthropic (superpowers) |
+| [**`writing-plans`**](./.claude/skills/writing-plans/SKILL.md) | Elaboração de planos de execução multi-etapas com especificações | Anthropic (superpowers) |
+| [**`executing-plans`**](./.claude/skills/executing-plans/SKILL.md) | Execução guiada de planos com checkpoints de revisão | Anthropic (superpowers) |
+| [**`subagent-driven-development`**](./.claude/skills/subagent-driven-development/SKILL.md) | Desenvolvimento acelerado dividindo tarefas entre subagentes | Anthropic (superpowers) |
+| [**`dispatching-parallel-agents`**](./.claude/skills/dispatching-parallel-agents/SKILL.md) | Orquestração e disparo paralelo de subagentes independentes | Anthropic (superpowers) |
+| [**`systematic-debugging`**](./.claude/skills/systematic-debugging/SKILL.md) | Diagnóstico sistemático e rigoroso da causa raiz de falhas e bugs | Anthropic (superpowers) |
+| [**`test-driven-development`**](./.claude/skills/test-driven-development/SKILL.md) | Ciclo oficial TDD (Red-Green-Refactor) para código limpo | Anthropic (superpowers) |
+| [**`requesting-code-review`**](./.claude/skills/requesting-code-review/SKILL.md) | Solicitação automatizada de revisão de código antes do merge | Anthropic (superpowers) |
+| [**`receiving-code-review`**](./.claude/skills/receiving-code-review/SKILL.md) | Avaliação e processamento seguro de feedbacks de code review | Anthropic (superpowers) |
+| [**`verification-before-completion`**](./.claude/skills/verification-before-completion/SKILL.md) | Verificação rigorosa antes de marcar qualquer tarefa como concluída | Anthropic (superpowers) |
+| [**`using-git-worktrees`**](./.claude/skills/using-git-worktrees/SKILL.md) | Isolamento seguro de trabalho usando Git Worktrees | Anthropic (superpowers) |
+| [**`finishing-a-development-branch`**](./.claude/skills/finishing-a-development-branch/SKILL.md) | Conclusão, merge e finalização de branches de desenvolvimento | Anthropic (superpowers) |
+| [**`writing-skills`**](./.claude/skills/writing-skills/SKILL.md) | Boas práticas para elaboração e criação de novas skills de IA | Anthropic (superpowers) |
+| [**`frontend-design`**](./.claude/skills/frontend-design/SKILL.md) | Design de componentes e páginas frontend elegantes | Anthropic (claude-plugins) |
+| [**`build-mcp-server`**](./.claude/skills/build-mcp-server/SKILL.md) | Criação e build de servidores MCP (*Model Context Protocol*) | Anthropic (claude-plugins) |
+
+---
+
+### 🎓 2. Pesquisa, Ciência Política & Redação Acadêmica (Manoel Galdino)
 
 | Skill | Descrição | Autor |
 | :--- | :--- | :--- |
@@ -40,7 +63,7 @@ Contém a coleção completa de skills autorais de **Tales Mançano**, skills ac
 | [**`review-paper`**](./.claude/skills/review-paper/SKILL.md) | Peer review cético e construtivo de manuscritos acadêmicos | Manoel Galdino |
 | [**`rewrite-introduction`**](./.claude/skills/rewrite-introduction/SKILL.md) | Reescrita de introdução sob os 5 elementos essenciais de introduções de topo | Manoel Galdino |
 | [**`slide-excellence`**](./.claude/skills/slide-excellence/SKILL.md) | Criação de slides acadêmicos em Beamer / Quarto / Marp | Manoel Galdino |
-| [**`stakeholder-pipeline`**](./.claude/skills/stakeholder-pipeline/SKILL.md) | Pipeline completo de mapeamento e análise de atores políticos (com sub-skills `bio`, `critic`, `deep-dive`, `mapper`, `source-verifier`) | Manoel Galdino |
+| [**`stakeholder-pipeline`**](./.claude/skills/stakeholder-pipeline/SKILL.md) | Pipeline completo de mapeamento e análise de atores políticos | Manoel Galdino |
 | [**`strategic-negotiation`**](./.claude/skills/strategic-negotiation/SKILL.md) | Análise de negociação estratégica baseada em teoria dos jogos | Manoel Galdino |
 | [**`theory-framing`**](./.claude/skills/theory-framing/SKILL.md) | Enquadramento teórico e justificativa de mecanismos causais | Manoel Galdino |
 | [**`validate-bib`**](./.claude/skills/validate-bib/SKILL.md) | Validação e higienização de arquivos BibTeX / Zotero | Manoel Galdino |
@@ -48,7 +71,7 @@ Contém a coleção completa de skills autorais de **Tales Mançano**, skills ac
 
 ---
 
-### 🛠️ 2. Engenharia de Software, TDD & Arquitetura (Matt Pocock)
+### 🛠️ 3. Engenharia de Software, TDD & Arquitetura (Matt Pocock)
 
 | Skill | Descrição | Autor |
 | :--- | :--- | :--- |
@@ -67,11 +90,10 @@ Contém a coleção completa de skills autorais de **Tales Mançano**, skills ac
 | [**`to-tickets`**](./.claude/skills/to-tickets/SKILL.md) | Decomposição de tarefas complexas em tickets/issues de desenvolvimento | Matt Pocock |
 | [**`triage`**](./.claude/skills/triage/SKILL.md) | Triagem rápida de bugs, issues e dívida técnica | Matt Pocock |
 | [**`wayfinder`**](./.claude/skills/wayfinder/SKILL.md) | Navegação e orientação estruturada em codebases grandes | Matt Pocock |
-| [**`writing-great-skills`**](./.claude/skills/writing-great-skills/SKILL.md) | Guia completo para elaboração de novas skills eficazes para IAs | Matt Pocock |
 
 ---
 
-### ⚡ 3. Produtividade & Entrevistas Interativas
+### ⚡ 4. Produtividade & Entrevistas Interativas
 
 | Skill | Descrição | Autor |
 | :--- | :--- | :--- |
@@ -83,7 +105,7 @@ Contém a coleção completa de skills autorais de **Tales Mançano**, skills ac
 
 ---
 
-### 🤖 4. Governança Agêntica & Automação do Ecossistema (Tales Mançano)
+### 🤖 5. Governança Agêntica & Automação do Ecossistema (Tales Mançano)
 
 | Skill | Descrição | Autor |
 | :--- | :--- | :--- |
@@ -95,7 +117,7 @@ Contém a coleção completa de skills autorais de **Tales Mançano**, skills ac
 
 ---
 
-### 🎨 5. Skills Autorais Customizadas (Tales Mançano)
+### 🎨 6. Skills Autorais Customizadas (Tales Mançano)
 
 | Skill | Descrição | Autor |
 | :--- | :--- | :--- |

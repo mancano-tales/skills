@@ -2,6 +2,19 @@
 
 Este arquivo documenta as mudanças importantes na estrutura, adiantamento de skills e convenções de governança do repositório `skills`.
 
+## 2026-07-27 14:53 — Importação do Pacote Superpowers & Plugins Oficiais da Anthropic
+
+* **Importação & Atribuição de Autoria**: Incorporadas as 14 skills do pacote oficial **`superpowers`** (Anthropic v5.1.0) e plugins oficiais de desenvolvimento (`frontend-design`, `build-mcp-server`, `claude-md-improver`) no repositório [`skills`](file:///c:/Users/Mancano/Documents/MancanoSync/skills).
+* **Atribuição Explícita**: Cada arquivo `SKILL.md` foi atualizado no YAML frontmatter com `autor: "Anthropic (claude-plugins-official / superpowers)"`.
+* **Catálogo Atualizado**: O [`README.md`](file:///c:/Users/Mancano/Documents/MancanoSync/skills/README.md) foi atualizado com a seção dedicada a Superpotências & Workflows de Agentes.
+* **Espelhamento Global**: As skills foram replicadas também nas pastas de configuração global `C:\Users\Mancano\.claude\skills\` e `C:\Users\Mancano\.gemini\config\skills\`.
+
+**Metadados de Execução**:
+- **Data/Hora**: 2026-07-27 14:53 (Horário Local)
+- **Agente**: Antigravity / Gemini 3.6 Flash (High) / Antigravity IDE
+- **Mensagem do Commit**: "feat(skills): importa pacote superpowers e plugins oficiais da Anthropic com atribuicao de autoria"
+- **Arquivos afetados**: `.claude/skills/`, `README.md`, `NEWS.md`
+
 ## 2026-07-27 14:32 — Importação da Suíte Completa de Skills de Manoel Galdino e Matt Pocock
 
 * **Importação & Atribuição de Autoria**: Incorporadas 86 skills no repositório `skills`, divididas entre as suítes acadêmicas e de ciência política de Manoel Galdino (`mgaldino/agents-workflow`), as suítes de engenharia e produtividade de Matt Pocock (`mattpocock/skills`) e as skills autorais de Tales Mançano.
