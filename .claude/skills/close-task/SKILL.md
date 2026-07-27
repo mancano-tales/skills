@@ -13,7 +13,7 @@ Esta skill define o Procedimento Operacional Padrão (SOP) que todo agente deve 
 Siga OS PASSOS ABAIXO EXATAMENTE NESTA ORDEM:
 
 ## 1. Marcar o Plano como Concluído
-- Localize o plano ativo (em `9-vers/plan/`) que originou a tarefa. Se houver mais de um, pergunte ao usuário qual deve ser finalizado.
+- Localize o plano ativo (em `0-governance/plan/`) que originou a tarefa. Se houver mais de um, pergunte ao usuário qual deve ser finalizado.
 - Use ferramentas de edição (e.g. replace_file_content) para mudar `status: "EM EXECUÇÃO"` (ou `"ATIVO"`) para `status: "CONCLUÍDO"`.
 - Adicione a chave `concluido: "YYYY-MM-DD HH:MM"` (data **e hora**, no seu fuso horário local — ver "Convenção de timestamp" no topo do `NEWS.md`) logo abaixo da chave `criado`, respeitando **exatamente** a indentação já usada por `criado` na mesma linha/nível — não invente indentação nova.
 - Adicione no array `relacionados` o nome ou identificador do log de conversa que será gerado no passo 4.
@@ -34,7 +34,7 @@ Siga OS PASSOS ABAIXO EXATAMENTE NESTA ORDEM:
 - **Lembrete da Governança**: Nunca altere ou reescreva entradas antigas. Apenas adicione conteúdo novo (append) no topo do log de mudanças ou na seção da data de hoje.
 
 ## 3. Atualizar o Inventário de Logs
-- Abra o arquivo `9-vers/llm-reviews/README.md`.
+- Abra o arquivo `0-governance/llm-reviews/README.md`.
 - Adicione uma nova linha ao final (ou topo) da tabela `## Inventário` prevendo o arquivo do log que será exportado.
   - A convenção do nome gerado pelo script será: `YYYY-MM-DD_HHMM_<slug-descritivo-em-kebab-case>_conversa-<fonte>.md`.
   - Tipo: `Conversa`
@@ -49,10 +49,10 @@ Siga OS PASSOS ABAIXO EXATAMENTE NESTA ORDEM:
   ```bash
   Rscript <script_exportar_conversa> <SEU-ID-DE-SESSAO> <um-slug-descritivo-em-kebab-case>
   ```
-- O script vai gerar o arquivo Markdown na pasta `9-vers/llm-reviews/` e imprimir o caminho absoluto no terminal. Verifique se o nome do arquivo gerado coincide com o que você registrou no inventário no Passo 3. Se não, corrija o inventário.
+- O script vai gerar o arquivo Markdown na pasta `0-governance/llm-reviews/` e imprimir o caminho absoluto no terminal. Verifique se o nome do arquivo gerado coincide com o que você registrou no inventário no Passo 3. Se não, corrija o inventário.
 
 ## 5. Validação e Sincronização
-- **NUNCA use `git add .` ou `git add -A`** — proibido pelo `CLAUDE.md` § "Strict Staging Policy". Faça `git status` e stage **explicitamente, arquivo por arquivo**, apenas: (a) o plano editado no passo 1; (b) `NEWS.md` editado no passo 2; (c) `9-vers/llm-reviews/README.md` editado no passo 3; (d) o log de conversa exportado no passo 4; (e) qualquer arquivo de código/script/figura que você mesmo editou como parte desta tarefa (você já sabe quais são — enumere-os, não adivinhe pelo `git status`).
+- **NUNCA use `git add .` ou `git add -A`** — proibido pelo `CLAUDE.md` § "Strict Staging Policy". Faça `git status` e stage **explicitamente, arquivo por arquivo**, apenas: (a) o plano editado no passo 1; (b) `NEWS.md` editado no passo 2; (c) `0-governance/llm-reviews/README.md` editado no passo 3; (d) o log de conversa exportado no passo 4; (e) qualquer arquivo de código/script/figura que você mesmo editou como parte desta tarefa (você já sabe quais são — enumere-os, não adivinhe pelo `git status`).
   ```bash
   git add <caminho1> <caminho2> ...
   ```
@@ -75,4 +75,5 @@ Siga OS PASSOS ABAIXO EXATAMENTE NESTA ORDEM:
   3. Se o lock ainda existir depois disso, **PARE e avise o usuário** — não conclua sozinho que o lock está órfão, e **nunca apague `.git/index.lock` por conta própria**. Um lock órfão (processo travado/morto) parece idêntico a um lock ativo do ponto de vista do agente; distinguir os dois exige checar processos em execução (`tasklist`/`ps`) e a idade do arquivo, e a decisão de remover é do usuário.
 
 Ao finalizar todos os 6 passos com sucesso, comunique ao usuário que a tarefa foi encerrada e que o repositório está limpo, logado, e o commit da sessão foi realizado. Liste explicitamente qualquer arquivo que ficou de fora do commit (ex.: caminhos protegidos por `diretorio_autoria_primaria`) e por quê. Pode então aguardar o encerramento da conversa.
+
 
