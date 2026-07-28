@@ -2,6 +2,37 @@
 
 Este arquivo documenta as mudanças importantes na estrutura, adiantamento de skills e convenções de governança do repositório `skills`.
 
+## 2026-07-28 00:15 — `skills` assume o papel de repositório-mãe; decisão de 2026-07-17 finalmente propagada
+
+**Decisão de arquitetura (autor, 2026-07-28).** O ecossistema tinha **duas mães declaradas** para as mesmas skills: o `agentic-research-template` se declarava mãe das skills de governança no seu `CLAUDE.md`, e este repositório reunia 101 skills incluindo as mesmas 11. Era isso que quebrava o `sync-skills` — ele comparava contra uma fonte que existia em duas versões, e o sinal "em dia / desatualizada" deixou de significar qualquer coisa.
+
+Fica definido:
+
+| Repositório | É dono de |
+|---|---|
+| **`skills`** (este) | as skills — os procedimentos, o *como* |
+| **`agentic-research-template`** | hooks, policy-as-code, validador, estrutura — o que torna a regra obrigatória |
+
+O template passa a ser **consumidor** das skills deste repositório. A interface entre os dois é a tabela **§ Configuração de Skills** do `CLAUDE.md` de cada consumidor: a skill permanece genérica e lê dali o que for específico do projeto (`diretorio_governanca`, `script_exportar_conversa`, `diretorio_autoria_primaria`). Esse contrato é o que permite duas mães sem acoplamento.
+
+**Auditoria de divergência — o resultado surpreendeu.** Comparando as 11 skills sobrepostas, 9 apareciam divergentes. Normalizando BOM, CRLF e o campo `autor:` inserido na rodada das 15:30 de ontem, **8 das 9 eram ruído de formatação, com conteúdo idêntico**. A divergência tinha sido criada horas antes, pela própria padronização de frontmatter — não por deriva real.
+
+Isso expõe um defeito do `sync-skills`: comparação por hash não distingue "conteúdo mudou" de "BOM foi adicionado". A ferramenta reportava informação verdadeira e inútil.
+
+**A única divergência real, e ela era grave.** `grill-me`, `grill-with-docs` e `edit-article` estavam com `disable-model-invocation: true` aqui e `false` no template. O `NEWS.md` do template, entrada de **2026-07-17 10:38**, registra a decisão do autor de mudar as três para `false` "em todos os consumidores", com `allow_implicit_invocation: true` no `agents/openai.yaml` correspondente.
+
+**A decisão nunca saiu do template.** Onze dias depois, o valor original do Matt Pocock persistia aqui **e nas duas cópias globais da máquina** (`~/.claude/skills/` e `~/.gemini/config/skills/`) — que são justamente as que os agentes carregam de fato. Na prática, a decisão do autor não estava em vigor em lugar nenhum.
+
+Corrigido nas três camadas (repositório + os dois espelhos globais), em `SKILL.md` e `agents/openai.yaml`. Verificação final: as 11 skills em paridade de conteúdo com o template.
+
+É o mesmo defeito que, no mesmo dia, fez uma correção nascida no `cha-affirmative-action-us-brazil` (commit `6f8e7e7`, 2026-07-21) ser reimplementada do zero no template seis dias depois. Correções e decisões não fluem entre repositórios; só viajam quando alguém lembra.
+
+**Metadados de Execução**:
+- **Data/Hora**: 2026-07-28 00:15 (Horário de Brasília)
+- **Agente**: Claude Opus 5 / claude-opus-5 / Claude Code (VS Code)
+- **Mensagem do Commit**: "fix(skills): propaga decisão de disable-model-invocation e define skills como repositório-mãe"
+- **Arquivos afetados**: `.claude/skills/{grill-me,grill-with-docs,edit-article}/SKILL.md` e `/agents/openai.yaml`, `NEWS.md`
+
 ## 2026-07-27 15:30 — Auditoria Adversarial Zero-Trust, Padronização de Frontmatter e Catálogo de 101 Skills
 
 * **Auditoria de Subagentes**: Concluída a auditoria adversarial mecânica com 12 subagentes (incluindo o modelo Pro em modo zero-trust).
