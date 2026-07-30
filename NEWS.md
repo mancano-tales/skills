@@ -2,6 +2,33 @@
 
 Este arquivo documenta as mudanças importantes na estrutura, adiantamento de skills e convenções de governança do repositório `skills`.
 
+## 2026-07-30 22:10 — Nova skill `conventional-commits` (issue #1)
+
+**Adicionado.** Skill `conventional-commits` em `skills/` e espelhada em `.claude/skills/`,
+cobrindo Conventional Commits 1.0.0, o mapeamento dos tipos para Semantic Versioning 2.0.0
+e o padrão Keep a Changelog 1.1.0. Acompanha `scripts/commit-msg`, hook de validação
+mecânica testado contra 20 casos (mensagens válidas, inválidas, `Merge`/`Revert` gerados
+pelo Git, e consistência entre `!` no cabeçalho e rodapé `BREAKING CHANGE:`).
+
+**Duas decisões de projeto que a skill documenta explicitamente:**
+
+*Não escrever o hash do commit no changelog.* A exigência é insatisfazível em um único
+commit: o hash é o SHA do conteúdo, logo gravá-lo em um arquivo que o commit versiona
+altera o conteúdo e o hash. É ponto fixo, não falha de implementação — `--amend` só produz
+um hash novo, igualmente não registrado. Quem tenta cumprir acaba com um commit de
+backfill após cada commit real. A skill orienta a derivar do `git log` em vez de armazenar.
+
+*Separar bloqueio de aviso.* O hook bloqueia apenas o objetivamente verificável (forma do
+cabeçalho, tipo, comprimento, ponto final, coerência de breaking change). A checagem de
+imperativo é heurística de sufixo e **avisa sem bloquear**, porque não distingue verbo de
+substantivo: `estado`, `comando` e `pedido` casariam com o padrão de particípio. Falso
+bloqueio é a principal causa de recurso a `--no-verify` e custa mais governança do que a
+regra compra.
+
+A skill também declara os limites de qualquer hook client-side: `--no-verify` o desliga,
+`core.hooksPath` não viaja no clone, e um hook versionado não se protege contra um commit
+que o substitua por `exit 0`.
+
 ## 2026-07-28 00:15 — `skills` assume o papel de repositório-mãe; decisão de 2026-07-17 finalmente propagada
 
 **Decisão de arquitetura (autor, 2026-07-28).** O ecossistema tinha **duas mães declaradas** para as mesmas skills: o `agentic-research-template` se declarava mãe das skills de governança no seu `CLAUDE.md`, e este repositório reunia 101 skills incluindo as mesmas 11. Era isso que quebrava o `sync-skills` — ele comparava contra uma fonte que existia em duas versões, e o sinal "em dia / desatualizada" deixou de significar qualquer coisa.
