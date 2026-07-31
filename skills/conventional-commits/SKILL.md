@@ -139,7 +139,7 @@ O hook separa deliberadamente o que **bloqueia** do que apenas **avisa**:
 | Ponto final no cabeçalho | bloqueia | objetivo |
 | `BREAKING CHANGE:` no rodapé sem `!` no cabeçalho | bloqueia | objetivo |
 | Descrição em gerúndio ou particípio | **avisa** | heurística falível |
-| `Merge`, `Revert`, `fixup!`, `squash!` | ignora | o Git gera sozinho |
+| `Merge`, `Revert`, `fixup!`, `squash!`, `Reapply` | ignora | o Git gera sozinho |
 
 A checagem de imperativo é heurística de sufixo e não distingue verbo de substantivo:
 `estado`, `comando`, `pedido` e `conteúdo` casam com os mesmos padrões. Bloquear com base
