@@ -2,6 +2,22 @@
 
 Este arquivo documenta as mudanças importantes na estrutura, adiantamento de skills e convenções de governança do repositório `skills`.
 
+## 2026-07-31 10:12 — `.coderabbit.yaml` versionado: a configuração de revisão vira policy-as-code
+
+**O achado que motiva.** Dos quatro PRs abertos no ecossistema em 2026-07-30/31, **apenas um foi revisado — e é o único ainda aberto** (o #4 deste repositório, com 7 achados `Major`). Os três mergeados sem revisão eram justamente os que alteravam a infraestrutura de enforcement.
+
+**Neste repositório especificamente**: o PR #2 reescreveu `tools/sync-skills.ps1`/`.sh` (+132/−81 e +118/−68) e **removeu `tools/.skills-source`** sem uma única linha de revisão. É o mesmo utilitário que, em auditoria posterior no mesmo dia, mostrou-se capaz de causar **regressão silenciosa**: seu relatório marcava como "desatualizada" a cópia do consumidor quando quem estava atrás era a mãe, de modo que um `--apply all` sobrescreveria a versão nova com a antiga.
+
+**A causa estrutural.** Nenhum repositório do ecossistema tinha `.coderabbit.yaml` — toda a configuração vivia na UI, não versionada, não auditável, sem histórico de quem mudou o quê. Isso contradiz o policy-as-code que o ecossistema adota: **a configuração que decide se um PR é revisado é política, e política mora no repositório.** Uma regra que só existe num painel web tem o mesmo status epistêmico de uma regra escrita em prosa — é intenção, não controle.
+
+**A chave que importa** é `reviews.auto_review.base_branches`, que inclui `audit/.*` além de `main`. Como PR mergeado **não pode ser reaberto** no GitHub, a forma não destrutiva de submeter à revisão um código já mergeado é abrir um PR de `main` **para** uma branch de baseline criada no commit anterior ao merge (para o PR #2 deste repositório, `400865f`). Esse PR tem base não-default por construção e, sem essa linha, seria pulado — que é exatamente o modo de falha que o arquivo existe para corrigir.
+
+**Metadados de Execução**:
+- **Data/Hora**: 2026-07-31 10:12 (Horário de Brasília)
+- **Agente**: Claude Opus 5 / claude-opus-5 / Claude Code (VS Code)
+- **Mensagem do Commit**: "chore(review): versiona .coderabbit.yaml e cobre branches de auditoria"
+- **Arquivos afetados**: `.coderabbit.yaml`, `NEWS.md`
+
 ## 2026-07-30 22:10 — Nova skill `conventional-commits` (issue #1)
 
 **Adicionado.** Skill `conventional-commits` em `skills/` e espelhada em `.claude/skills/`,
