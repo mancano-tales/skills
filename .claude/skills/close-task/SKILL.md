@@ -1,4 +1,4 @@
-﻿---
+---
 autor: "Tales Mançano / Ecossistema"
 name: close-task
 description: Cerimônia completa de encerramento de tarefa. Executa todo o workflow de auditoria: marca planos como concluídos, escreve no NEWS.md, atualiza o inventário de logs, exporta a conversa da sessão atual e faz o commit seguro. Só rodar uma vez no final definitivo da sessão.
@@ -6,73 +6,160 @@ description: Cerimônia completa de encerramento de tarefa. Executa todo o workf
 
 # Cerimônia de Encerramento (Close Task)
 
-Esta skill define o Procedimento Operacional Padrão (SOP) que todo agente deve seguir estritamente quando o usuário solicitar o encerramento ou finalização de uma tarefa. Esta skill é **idêntica em todo repositório que a usa** — qualquer particularidade deste projeto (caminho do script de exportação, pasta de autoria protegida) vem de `CLAUDE.md` § "Configuração de Skills", nunca hardcoded aqui.
+Procedimento operacional padrão para encerrar uma sessão de trabalho em qualquer
+repositório do ecossistema.
 
-**ATENÇÃO CRÍTICA**: Esta skill só deve ser executada **UMA ÚNICA VEZ**, no fim definitivo da conversa/sessão. Nunca a rode a cada mensagem, pois o script de exportação cria múltiplas cópias do histórico se invocado repetidamente.
+**Esta skill é idêntica em todo repositório que a usa.** Por isso ela não pode conter
+o nome do diretório de governança, o formato do `NEWS.md` nem o caminho de nenhum
+script: esses valores divergem entre os repositórios. Todos são **descobertos no
+passo 0**, contra o repositório em que a skill está rodando.
 
-Siga OS PASSOS ABAIXO EXATAMENTE NESTA ORDEM:
+**ATENÇÃO CRÍTICA**: execute esta skill **UMA ÚNICA VEZ**, no fim definitivo da
+sessão. O exportador de conversa cria uma cópia nova a cada invocação.
 
-## 1. Marcar o Plano como Concluído
-- Localize o plano ativo (em `9-vers/plan/`) que originou a tarefa. Se houver mais de um, pergunte ao usuário qual deve ser finalizado.
-- Use ferramentas de edição (e.g. replace_file_content) para mudar `status: "EM EXECUÇÃO"` (ou `"ATIVO"`) para `status: "CONCLUÍDO"`.
-- Adicione a chave `concluido: "YYYY-MM-DD HH:MM"` (data **e hora**, no seu fuso horário local — ver "Convenção de timestamp" no topo do `NEWS.md`) logo abaixo da chave `criado`, respeitando **exatamente** a indentação já usada por `criado` na mesma linha/nível — não invente indentação nova.
-- Adicione no array `relacionados` o nome ou identificador do log de conversa que será gerado no passo 4.
-- **Checkpoint obrigatório**: assim que terminar esta edição, rode `Rscript tools/validate-governance.R` (sem `--sync`) antes de prosseguir para o passo 2. O parser YAML deste repositório já teve bugs reais de indentação/aspas passarem despercebidos até o commit; rodar o validador aqui pega corrupção de YAML imediatamente, com o arquivo ainda fácil de corrigir, em vez de só no passo 5.
+---
 
-## 2. Escrever no NEWS.md
-- Abra o `NEWS.md` na raiz.
-- Adicione uma entrada com cabeçalho `## YYYY-MM-DD HH:MM — Título` (data e hora reais, no fuso local — nunca só a data; ver convenção no topo do arquivo) relatando resumidamente o que foi feito nesta sessão (decisões, códigos alterados, bugs corrigidos).
-- **Obrigatório**: encerre a entrada com o bloco de **Metadados de Execução** exigido pelo `CLAUDE.md` § "Synchronized Commit Policy":
-  ```markdown
-  **Metadados de Execução**:
-  - **Data/Hora**: YYYY-MM-DD HH:MM (Horário Local)
-  - **Agente**: <seu nome/plataforma> / <modelo> / <ambiente de execução>
-  - **Mensagem do Commit**: "<mesma mensagem que você vai usar no passo 6>"
-  - **Arquivos afetados**: <lista dos arquivos que você vai stagear no passo 5>
-  ```
-  Uma entrada sem esse bloco, ou com timestamp só-data, não está em conformidade — `validate-governance.R` hoje não bloqueia isso automaticamente, então a responsabilidade é sua.
-- **Lembrete da Governança**: Nunca altere ou reescreva entradas antigas. Apenas adicione conteúdo novo (append) no topo do log de mudanças ou na seção da data de hoje.
+## Passo 0 — Descobrir as convenções deste repositório
 
-## 3. Atualizar o Inventário de Logs
-- Abra o arquivo `9-vers/llm-reviews/README.md`.
-- Adicione uma nova linha ao final (ou topo) da tabela `## Inventário` prevendo o arquivo do log que será exportado.
-  - A convenção do nome gerado pelo script será: `YYYY-MM-DD_HHMM_<slug-descritivo-em-kebab-case>_conversa-<fonte>.md`.
-  - Tipo: `Conversa`
-  - Fonte: O seu nome (ex: `Antigravity` ou `Claude`)
-  - Assunto: Um parágrafo detalhado das decisões tomadas nesta sessão de trabalho.
+Antes de qualquer edição, resolva os cinco valores abaixo. **Não presuma nenhum
+deles.** Anote o que encontrou: você vai declará-los no relatório final.
 
-## 4. Exportar a Conversa
-- Você deve exportar o registro desta sessão rodando o script utilitário existente (que suporta tanto Claude quanto Antigravity). O caminho do script é a chave **`script_exportar_conversa`** em `CLAUDE.md` § "Configuração de Skills" deste repositório (se a chave não estiver preenchida, tente `tools/export_conversa.R`).
-- **Para Antigravity**: você tem o seu ID de conversa na variável de metadados do contexto (ex: `071f9430-...`).
-- **Para Claude**: você pode inferir o UUID a partir do seu scratchpad.
-- Execute no terminal (completando o caminho do script, o seu ID da sessão atual e um slug amigável e conciso de até 4 palavras):
-  ```bash
-  Rscript <script_exportar_conversa> <SEU-ID-DE-SESSAO> <um-slug-descritivo-em-kebab-case>
-  ```
-- O script vai gerar o arquivo Markdown na pasta `9-vers/llm-reviews/` e imprimir o caminho absoluto no terminal. Verifique se o nome do arquivo gerado coincide com o que você registrou no inventário no Passo 3. Se não, corrija o inventário.
+| Valor | Como resolver | Se não existir |
+| :--- | :--- | :--- |
+| `DIR_GOVERNANCA` | Chave `diretorio_governanca` na tabela § "Configuração de Skills" do `CLAUDE.md`/`AGENTS.md`. Sem a tabela, procure o diretório que contenha as subpastas `plan/` **e** `llm-reviews/` | Pergunte ao usuário; não invente |
+| `GOV_DIR` (env) | Necessária **só se** `DIR_GOVERNANCA` estiver fora da lista padrão do exportador (`0-meta`, `9-vers`). Exportar sem ela grava o log na pasta errada, em silêncio | Não precisa exportar a variável |
+| `SCRIPT_EXPORTACAO` | Chave `script_exportar_conversa`. Fallback: `export_conversa.R` em `tools/` | Ver passo 4, caso B |
+| `VALIDADOR` | `validate-governance.R` em `tools/` | Pule as validações e declare isso |
+| `FORMATO_NEWS` | **Leia o `NEWS.md` existente** e imite o que já está lá | Ver passo 2 |
+| `DIR_AUTORIA_PROTEGIDA` | Chaves `diretorio_autoria_primaria` / `arquivo_gerenciado_externamente` | Nenhum arquivo é protegido |
 
-## 5. Validação e Sincronização
-- **NUNCA use `git add .` ou `git add -A`** — proibido pelo `CLAUDE.md` § "Strict Staging Policy". Faça `git status` e stage **explicitamente, arquivo por arquivo**, apenas: (a) o plano editado no passo 1; (b) `NEWS.md` editado no passo 2; (c) `9-vers/llm-reviews/README.md` editado no passo 3; (d) o log de conversa exportado no passo 4; (e) qualquer arquivo de código/script/figura que você mesmo editou como parte desta tarefa (você já sabe quais são — enumere-os, não adivinhe pelo `git status`).
-  ```bash
-  git add <caminho1> <caminho2> ...
-  ```
-  **Consulte a chave `diretorio_autoria_primaria` em `CLAUDE.md` § "Configuração de Skills".** Se estiver preenchida e `git status` mostrar mudanças ali, NÃO as inclua no commit mesmo que tenham sido feitas por você — avise o usuário que ficaram fora do commit.
-- Sincronize o índice de planos (só isso — ver nota abaixo):
-  ```bash
-  Rscript tools/validate-governance.R --sync
-  ```
-  **Nota de arquitetura**: `--sync` só reescreve `plan/README.md` a partir do YAML dos planos no disco e sai (`quit(status=0)` logo depois); ele **não roda as checagens T1-T6** (caminhos absolutos, tamanho de blob, styler, citações, marcadores de conflito). Essas checagens rodam automaticamente pelo hook `pre-commit` durante o `git commit` do passo 6, sem `--sync`. Não pule o passo 6 achando que já foi tudo validado aqui.
+Valores já observados no ecossistema, apenas para calibrar a busca — a lista é
+ilustrativa e **não** deve ser tratada como exaustiva:
 
-## 6. Commit (Tratamento de Concorrência)
-- Faça o commit das alterações **só com os arquivos stageados no passo 5** (nunca `git commit -a`), formatando a mensagem:
-  ```bash
-  git commit -m "chore: <assunto-ou-slug-da-tarefa>"
-  ```
-- O hook `pre-commit` roda `Rscript tools/validate-governance.R` (T1-T6) neste momento. Se ele bloquear o commit, corrija o problema apontado — não contorne com `--no-verify` sem autorização explícita do usuário nesta conversa.
-- **Tratamento de Concorrência e Index.Lock**: como trabalhamos num ecossistema multiagente, o Git pode acusar que `.git/index.lock` já existe. Isso **não é um erro lógico ou sintático** — só significa que outro processo git está em andamento. Trate assim, com limite:
-  1. Aguarde ~3-5 segundos e tente de novo.
-  2. Repita no máximo **3 vezes** (~15 segundos no total).
-  3. Se o lock ainda existir depois disso, **PARE e avise o usuário** — não conclua sozinho que o lock está órfão, e **nunca apague `.git/index.lock` por conta própria**. Um lock órfão (processo travado/morto) parece idêntico a um lock ativo do ponto de vista do agente; distinguir os dois exige checar processos em execução (`tasklist`/`ps`) e a idade do arquivo, e a decisão de remover é do usuário.
+- `DIR_GOVERNANCA`: `0-meta/` (raiz `MancanoSync`, `skills`), `9-vers/` (repos de
+  pesquisa, onde é o slot 9 de uma taxonomia numerada), `repo-govrn/` (`edupol`).
+- `FORMATO_NEWS`: seções datadas com bloco de **Metadados de Execução** (raiz, skills)
+  · **Keep a Changelog 1.1.0**, com categorias `Adicionado`/`Corrigido`/`Alterado` e uma
+  linha por commit com hash e timestamp (`edupol`, ver `AGENTS.md` § 5).
 
-Ao finalizar todos os 6 passos com sucesso, comunique ao usuário que a tarefa foi encerrada e que o repositório está limpo, logado, e o commit da sessão foi realizado. Liste explicitamente qualquer arquivo que ficou de fora do commit (ex.: caminhos protegidos por `diretorio_autoria_primaria`) e por quê. Pode então aguardar o encerramento da conversa.
+---
 
+## Passo 1 — Fechar o plano, se houver um
+
+- Liste os planos em `<DIR_GOVERNANCA>/plan/` e leia o `status` de cada um.
+- Feche **apenas o plano que originou esta tarefa**.
+  - Havendo mais de um candidato, **pergunte ao usuário**.
+  - Havendo planos abertos que **não** são desta tarefa (típico quando outra sessão
+    trabalha em paralelo), **não toque neles** e diga isso no relatório final.
+  - Se **nenhum** plano corresponde a esta tarefa — caso comum quando o trabalho foi
+    incremental e não exigiu plano —, pule este passo e registre a ausência. Não crie
+    um plano retroativo, e não feche o de outra pessoa só para ter o que fechar.
+- Ao fechar, use o valor de conclusão **que o próprio repositório usa** (`CONCLUÍDO`,
+  `🟢 Concluído`, `Concluído`…; confira o índice de planos) e preencha
+  `concluido: "YYYY-MM-DD HH:MM"` respeitando a indentação e o estilo de aspas já
+  usados pela chave `criado` no mesmo arquivo.
+- Acrescente ao array `relacionados` o nome do log que será gerado no passo 4.
+- **Checkpoint**: rode `<VALIDADOR>` agora. Erros de indentação YAML já passaram
+  despercebidos até o commit neste ecossistema; pegar aqui é barato.
+
+## Passo 2 — Registrar no NEWS.md
+
+Escreva a entrada **no formato que o arquivo já usa** (`FORMATO_NEWS`, passo 0).
+Impor um formato estranho ao repositório quebra a consistência do changelog e, onde
+houver validação de formato, bloqueia o commit.
+
+- **Seções datadas**: cabeçalho `## YYYY-MM-DD HH:MM — Título` e, ao final, o bloco
+  **Metadados de Execução** (Data/Hora, Agente, Mensagem do Commit, Arquivos afetados)
+  exigido pela § "Synchronized Commit Policy".
+- **Keep a Changelog**: uma linha por alteração, na categoria correta, no padrão de
+  entrada do repositório.
+
+Em ambos: **timestamp com hora e minuto**, no fuso local, nunca só a data. Se a hora
+exata não for recuperável, deixe só a data e explique por quê — não invente.
+
+**Nunca reescreva entradas antigas.** Só append.
+
+## Passo 3 — Atualizar o inventário de logs
+
+Abra `<DIR_GOVERNANCA>/llm-reviews/README.md` e acrescente uma linha à tabela,
+**usando as colunas que a tabela já tem** — elas variam entre repositórios. O nome do
+arquivo segue a convenção do exportador:
+`YYYY-MM-DD_HHMM_<slug-em-kebab-case>_conversa-<fonte>.md`.
+
+Confira o nome real gerado no passo 4 e corrija a linha se divergir.
+
+## Passo 4 — Exportar a conversa
+
+**Caso A — `SCRIPT_EXPORTACAO` existe:**
+
+```bash
+# Exporte GOV_DIR se o diretório de governança deste repositório estiver fora da
+# lista padrão do exportador — sem isso o log vai para uma pasta que não existe.
+GOV_DIR=<DIR_GOVERNANCA> Rscript <SCRIPT_EXPORTACAO> <ID-DA-SESSAO> <slug-em-kebab-case>
+```
+
+O ID da sessão: no Antigravity, está nos metadados do contexto; no Claude Code, pode
+ser inferido do caminho do scratchpad.
+
+Duas verificações obrigatórias depois de rodar:
+
+1. **Onde o arquivo foi gravado.** Mesmo com `GOV_DIR`, confira o caminho que o script
+   imprimiu. Sem a variável, o exportador cai no primeiro nome da lista padrão e grava
+   numa pasta que não existe — o log se perde em silêncio, já aconteceu (incidente de
+   2026-07-26). Se o destino estiver errado, mova o arquivo para
+   `<DIR_GOVERNANCA>/llm-reviews/`, remova a pasta espúria e **abra uma issue no
+   repositório do exportador**.
+2. **Se o log passa no validador.** O exportador grava o caminho absoluto do arquivo de
+   origem no cabeçalho, e transcrições de sessão costumam conter caminhos locais nas
+   chamadas de ferramenta. Repositórios que proíbem caminhos absolutos (`C:\Users\`,
+   `/home/`, `/Users/`) vão bloquear o commit. Ocorrendo isso, sanitize o log
+   substituindo a raiz do repositório e o diretório do usuário por marcadores, e
+   registre a substituição em nota dentro do próprio arquivo.
+
+**Caso B — não há exportador neste repositório:** não invoque o script de outro
+repositório sem antes conferir para onde ele grava. Declare no relatório final que o
+log não foi exportado e por quê.
+
+## Passo 5 — Validar e preparar o commit
+
+- **NUNCA use `git add .` ou `git add -A`.** Stage explícito, arquivo por arquivo:
+  (a) o plano do passo 1, se houve; (b) o `NEWS.md`; (c) o inventário do passo 3;
+  (d) o log exportado; (e) os arquivos que **você mesmo** editou nesta tarefa —
+  enumere-os de memória, não deduza do `git status`, que pode conter trabalho de outra
+  sessão em paralelo.
+- Se `DIR_AUTORIA_PROTEGIDA` estiver definido e houver mudanças ali, **não** as inclua,
+  ainda que sejam suas. Avise no relatório final.
+- **Antes de rodar o validador com qualquer flag, confirme que ele aceita a flag.** Nem
+  toda cópia de `validate-governance.R` no ecossistema implementa `--sync`; invocar uma
+  flag inexistente faz o script rodar em modo padrão sem avisar. Verifique com
+  `grep -c 'commandArgs' <VALIDADOR>` ou lendo o cabeçalho.
+  - Aceitando `--sync`: `Rscript <VALIDADOR> --sync` reescreve o índice de planos a
+    partir do YAML e **sai sem rodar as checagens**, que rodam no hook do passo 6.
+  - Não aceitando: rode `Rscript <VALIDADOR>` sem flag.
+
+## Passo 6 — Commit
+
+- Commit apenas do que foi stageado (**nunca `git commit -a`**), com a mensagem no
+  padrão do repositório. Vários exigem **Conventional Commits**, então
+  `chore: <assunto>` costuma servir — confirme a convenção antes.
+- O hook `pre-commit` roda o validador aqui. Bloqueando, **corrija a causa**. Não use
+  `--no-verify` sem autorização explícita do usuário nesta conversa.
+- **`.git/index.lock`**: em ecossistema multiagente isso significa que outro processo
+  git está ativo, não que houve erro. Espere 3-5 s e tente de novo, no máximo 3 vezes.
+  Persistindo, **pare e avise o usuário**. Nunca apague `index.lock` por conta própria:
+  um lock órfão é indistinguível de um lock ativo sem inspecionar processos, e a decisão
+  de removê-lo é do usuário.
+
+---
+
+## Relatório final
+
+Comunique o encerramento e declare explicitamente:
+
+1. Os valores resolvidos no passo 0 — `DIR_GOVERNANCA`, formato do `NEWS.md`, validador
+   e flags disponíveis.
+2. Qual plano foi fechado, ou que nenhum correspondia à tarefa, e quais planos abertos
+   de terceiros ficaram intactos.
+3. Arquivos deixados fora do commit e por quê.
+4. Qualquer passo que **não** pôde ser cumprido, e o motivo. Um passo pulado e declarado
+   é aceitável; um passo pulado em silêncio corrompe a auditoria.
