@@ -2,6 +2,22 @@
 
 Este arquivo documenta as mudanças importantes na estrutura, adiantamento de skills e convenções de governança do repositório `skills`.
 
+## 2026-09-26 — Exportador de conversas descontinuado
+
+**Decisão do autor, no chat:** desabilitar o exportador de conversas em todos os repositórios. Plano: `repo-governance/plan/2026-09-26_Plano_Descontinuar_Exportador_Conversas.md` no `mancano-repo-hub` (issue #27 de lá). Mudanças aqui, que é a fonte das skills:
+- `export-conversation` fica **descontinuada**: descrição e corpo dizem para não usar;
+- `close-task` perde os passos de inventário de logs e de exportação (de 6 para 4 passos);
+- a RULE 3 do `AGENTS.md`/`CLAUDE.md`, que obrigava a exportar, passa a dizer o contrário;
+- `tools/export_conversa.R` recusa rodar.
+
+Fica como estava a diferença entre esta fonte e a cópia do hub (`9-vers/` aqui, `{gov}` lá): ela continua no PR #4 deste repositório.
+
+**Metadados de Execução**:
+- **Data**: 2026-09-26
+- **Agente**: Claude Code / Claude Opus 5.5 / Claude Code on the web
+- **Mensagem do Commit**: "docs(skills): descontinua export-conversation e tira o export da close-task"
+- **Arquivos afetados**: `.claude/skills/export-conversation/SKILL.md`, `.claude/skills/close-task/SKILL.md`, `AGENTS.md`, `CLAUDE.md`, `tools/export_conversa.R`, `NEWS.md`
+
 ## 2026-07-30 22:10 — Nova skill `conventional-commits` (issue #1)
 
 **Adicionado.** Skill `conventional-commits` em `skills/` e espelhada em `.claude/skills/`,
