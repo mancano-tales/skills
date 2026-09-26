@@ -1,70 +1,43 @@
-# CLAUDE.md — Skills (Repositório de Skills Agênticas)
+# AGENTS.md — skills (repositório de skills agênticas)
 
-> 🚨 **CRITICAL AGENT RULES (COVENANT) — READ FIRST:**
-> - **RULE 1:** You are operating under the **Agent Covenant** framework. Every commit is audited. Run `Rscript tools/validate-governance.R` to test your edits before committing.
-> - **RULE 2:** Any modification in main files REQUIRES an update in the root `NEWS.md` file in the same commit.
-> - **RULE 3 (changed 2026-09-26):** Export the conversation **only when the author asks** (`Rscript tools/export_conversa.R <session_uuid> [slug]`), once per session. Never on your own initiative or as an automatic end-of-task step: repeated exports of the same session become versioned junk.
-> - **RULE 4 (MULTI-AGENT INTEROPERABILITY):** This repository supports Claude Code (`.claude/`), Antigravity/Gemini (`.agents/`), OpenAI/Codex (`AGENTS.md`), and GitHub Copilot (`.github/copilot-instructions.md`). Hard links and junctions maintain full physical parity across all platforms.
-> - **For humans:** see [GUIDANCE.md](GUIDANCE.md) for the sitemap.
+Contexto operacional para agentes de IA. É o **único** arquivo de instruções: o `CLAUDE.md` contém só `@AGENTS.md` e o `.github/copilot-instructions.md` só aponta para cá. Para humanos: `README.md` e `GUIDANCE.md`. A história está no `NEWS.md`.
 
----
+## 1. O que é
 
-## Current State of the Project (version dated 2026-07-27)
+Fonte das skills do ecossistema do autor, para Claude Code, Codex, Gemini/Antigravity e Copilot. O hub (`mancano-repo-hub`) e os repos consumidores puxam daqui com `sync-skills` (`tools/.skills-source` → `../skills`); **nunca há sincronização automática**.
 
-> **Esta seção é a única fonte de verdade sobre a concepção ATUAL do repositório.** Alterações de design, arquitetura e convenções devem ser registradas aqui.
+## 2. Estrutura
 
-- **Descrição Geral**: Repositório central de **Skills customizadas** e de governança para assistentes de IA (Antigravity, Claude Code, OpenAI, Gemini). Versiona tanto a coleção pública de skills quanto as 11 skills compartilhadas do ecossistema `MancanoSync`.
-- **Arquitetura & Componentes**:
-  - `skills/`: Diretório contendo skills autorais customizadas (ex.: `tts-html-builder`).
-  - `.claude/skills/`: Diretório de skills ativas de governança e ferramentas (11 skills compartilhadas da matriz `agentic-research-template`).
-  - `.agents`: Junction NTFS / Symlink apontando fisicamente para `.claude` (garante que IAs que buscam `.agents` acessem as mesmas skills sem duplicação de dados).
-  - `0-meta/`: Scaffold de governança (`0-meta/plan/` para planos, `0-meta/llm-reviews/` para auditorias de conversas).
-  - `tools/`: Scripts de sincronização (`sync-skills.ps1`/`.sh`), exportação (`export_conversa.R`) e validação (`validate-governance.R`).
-  - `hooks/`: Git Hooks (`post-merge`, `post-checkout`) para verificação automática de sincronização em segundo plano.
-- **Proibições Estritas (Standing Prohibitions)**:
-  - Nunca execute `git add .` ou `git add -A`. Apenas adicione os arquivos específicos modificados (`git add <file>`).
-  - Nunca edite manualmente arquivos gerenciados externamente sem registrar no `NEWS.md`.
-  - Nunca quebre os hard links físicos (`AGENTS.md` ≡ `CLAUDE.md`, `.github/copilot-instructions.md` ≡ `CLAUDE.md`).
-- **Planos ativos**: consulte o índice de status em `0-meta/plan/README.md`.
+| Caminho | O que é |
+|---|---|
+| `.claude/skills/<nome>/SKILL.md` | Skills ativas: as de governança (`close-task`, `export-conversation`, `git-cleanup`, `request-audit`, `sync-skills`…) e as de pesquisa e desenvolvimento |
+| `skills/` | Skills autorais publicáveis (`tts-html-builder`, `conventional-commits`). **Autoria primária** |
+| `.agents` | Junção/symlink para `.claude` (gitignorada; recriar com `setup` do template se sumir) |
+| `0-meta/` | Governança: `plan/` (índice em `plan/README.md`), `llm-reviews/` |
+| `tools/` | `sync-skills.ps1`/`.sh`, `export_conversa.R`, `validate-governance.R` |
+| `hooks/` | `post-merge`, `post-checkout`: relatório de sincronização de skills |
 
----
+## 3. Regras
 
-## Guidance Documents: Map and Precedence Rules
-
-**Regras de Precedência:**
-1. Em caso de conflito, a seção "Current State" acima + o plano ativo em `0-meta/plan/` correspondente prevalecem sobre qualquer outro documento.
-2. Arquivos marcados com banner de desatualização/arquivamento são mantidos apenas para histórico.
-
-| Documento | Público | Função | Quando Atualizar |
-|---|---|---|---|
-| `CLAUDE.md` / `AGENTS.md` | Agentes | Estado ATUAL do projeto, convenções e mapa | Mudança de arquitetura |
-| `TODO.md` | Ambos | Log append-only de tarefas (Pendente/Prospectivo/Concluído) | A cada tarefa |
-| `README.md` | Humanos | Apresentação do repositório, guia de uso e lista de skills | Adição de skill |
-| `NEWS.md` | Ambos | Registro intelectual de alterações | A cada commit |
-| `0-meta/plan/README.md` | Ambos | Índice de status dos planos | Criação ou mudança de status |
-
----
-
-## Git e Convenções de Documentação
-
-- **Commits Permitidos**: Agentes de IA estão autorizados a fazer commits diretamente no repositório.
-- **Staging Cirúrgico**: Agentes **NUNCA** devem utilizar `git add .`. Devem adicionar cirurgicamente apenas os arquivos modificados (ex: `git add .claude/skills/sync-skills/SKILL.md`).
-- **Synchronized Commit Policy (Co-committing)**: Cada commit com mudanças deve atualizar o `NEWS.md` na mesma transação de commit, incluindo o bloco de metadados:
+- **Staging cirúrgico**: `git add <arquivo>`; nunca `git add .`/`-A`.
+- **Co-commit**: toda mudança leva a entrada no `NEWS.md` no mesmo commit (cabeçalho `## YYYY-MM-DD — Título`, só a data), terminando com:
   ```markdown
   **Metadados de Execução**:
-  - **Data/Hora**: YYYY-MM-DD HH:MM (Horário Local)
-  - **Agente**: [Nome do Agente] / [Modelo] / [Plataforma]
-  - **Mensagem do Commit**: "sua mensagem aqui"
-  - **Arquivos afetados**: caminho/do/arquivo1, caminho/do/arquivo2
+  - **Data**: YYYY-MM-DD
+  - **Agente**: [Nome] / [Modelo] / [Plataforma]
+  - **Mensagem do Commit**: "..."
+  - **Arquivos afetados**: ...
   ```
+- **Skills genéricas não hardcodeiam nada** do repo que as usa: valores específicos vêm da seção "Configuração de Skills" do `AGENTS.md` de cada consumidor. Mudou a interface (uma chave nova), avise no `NEWS.md` e no `README.md`.
+- **Skills portadas de terceiros** (ex. [mattpocock/skills](https://github.com/mattpocock/skills)) ficam fiéis ao original, com a licença e a origem no `README.md`.
+- **Exportar conversa só quando o autor pedir**, uma vez por sessão (nunca ao fim de toda tarefa): `Rscript tools/export_conversa.R <session_uuid> [slug]`.
+- Validar antes de commitar: `Rscript tools/validate-governance.R`.
 
----
-
-## Configuração de Skills (Skill Configuration)
+## 4. Configuração de Skills
 
 | Chave | Usada por | Valor neste repositório |
 |---|---|---|
 | `diretorio_governanca` | todas as skills | `0-meta/` |
 | `diretorio_autoria_primaria` | `close-task`, `git-cleanup` | `skills/` |
-| `script_exportar_conversa` | `close-task`, `export-conversation` | `tools/export_conversa.R` |
+| `script_exportar_conversa` | `close-task`, `export-conversation` (só quando o autor pedir) | `tools/export_conversa.R` |
 | `diretorios_trabalho_continuo` | `git-cleanup` | `0-meta/plan/` |

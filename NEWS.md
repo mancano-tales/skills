@@ -2,6 +2,22 @@
 
 Este arquivo documenta as mudanças importantes na estrutura, adiantamento de skills e convenções de governança do repositório `skills`.
 
+## 2026-09-26 — AGENTS.md único e enxuto; CLAUDE.md vira ponteiro
+
+Decisão do autor (plano `repo-governance/plan/2026-09-26_Plano_AGENTS_Enxutos_e_Export_Sob_Demanda.md` do `mancano-repo-hub` (issue #27 de lá)). O `AGENTS.md` foi reescrito (70 → 43 linhas); o `CLAUDE.md` agora é só `@AGENTS.md` e o `.github/copilot-instructions.md` só aponta para o `AGENTS.md`.
+
+**O que saiu:**
+- a RULE 4, a proibição de "quebrar os hard links" e a tabela de precedência: sem hard link, não há espelho;
+- "11 skills da matriz `agentic-research-template`": este repo é hoje a fonte das skills do ecossistema, e o template se chama `agentic-workflow-template`.
+
+**Validador.** O `tools/validate-governance.R` perdeu o bloco de "self-healing de links". Ele copiava o `CLAUDE.md` por cima do `AGENTS.md` sempre que os dois divergiam, e com o ponteiro apagaria o `AGENTS.md`.
+
+**Metadados de Execução**:
+- **Data**: 2026-09-26
+- **Agente**: Claude Code / Claude Opus 5.5 / Claude Code on the web
+- **Mensagem do Commit**: "docs(agents): AGENTS.md unico e enxuto; CLAUDE.md vira @AGENTS.md"
+- **Arquivos afetados**: `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `tools/validate-governance.R`, `NEWS.md`
+
 ## 2026-09-26 — Correção: exportar conversa só quando o autor pedir
 
 **A entrada anterior (`69c31a7`) partiu de um mal-entendido**, e o que ela fez foi desfeito. O autor não queria desativar o exportador nem as skills, e sim acabar com a obrigação de exportar ao fim de toda tarefa, que gera cópias repetidas da mesma conversa. Plano: `repo-governance/plan/2026-09-26_Plano_AGENTS_Enxutos_e_Export_Sob_Demanda.md` do `mancano-repo-hub` (issue #27 de lá). Como ficou:

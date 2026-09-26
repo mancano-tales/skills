@@ -14,15 +14,11 @@ cat_success <- function(...) cat("✅ ", paste0(...), "\n")
 cat_warn <- function(...) cat("⚠ ", paste0(...), "\n")
 cat_error <- function(...) cat("❌ ", paste0(...), "\n")
 
-# Self-healing de links
-if (file.exists("CLAUDE.md") && file.exists("AGENTS.md")) {
-  c_claude <- readLines("CLAUDE.md", warn = FALSE, encoding = "UTF-8")
-  c_agents <- readLines("AGENTS.md", warn = FALSE, encoding = "UTF-8")
-  if (!identical(c_claude, c_agents)) {
-    cat_warn("Divergência entre CLAUDE.md e AGENTS.md. Ressincronizando...")
-    file.copy("CLAUDE.md", "AGENTS.md", overwrite = TRUE)
-  }
-}
+# ── 0. (removido) Self-heal de hard link CLAUDE.md/AGENTS.md ────────────────
+# Removido em 2026-09-26, como no agentic-workflow-template (2026-07-29).
+# AGENTS.md e o unico arquivo de instrucoes; CLAUDE.md contem apenas
+# '@AGENTS.md'. Com o ponteiro, esta secao passaria a sobrescrever o AGENTS.md
+# com a linha '@AGENTS.md' (o arquivo mais novo "vencia"). Nao recrie.
 
 if (file.exists(PATH_PLAN_INDEX) && file.exists(PATH_REVIEWS_INDEX)) {
   cat_success("Estrutura de governança e índices validados em ", PATH_GOV_DIR, "/")
