@@ -3,7 +3,7 @@
 > 🚨 **CRITICAL AGENT RULES (COVENANT) — READ FIRST:**
 > - **RULE 1:** You are operating under the **Agent Covenant** framework. Every commit is audited. Run `Rscript tools/validate-governance.R` to test your edits before committing.
 > - **RULE 2:** Any modification in main files REQUIRES an update in the root `NEWS.md` file in the same commit.
-> - **RULE 3:** When completing a task or plan, you MUST run the conversation exporter to save your session log (`Rscript tools/export_conversa.R <session_uuid> [slug]`).
+> - **RULE 3 (changed 2026-09-26):** Export the conversation **only when the author asks** (`Rscript tools/export_conversa.R <session_uuid> [slug]`), once per session. Never on your own initiative or as an automatic end-of-task step.
 > - **RULE 4 (MULTI-AGENT INTEROPERABILITY):** This repository supports Claude Code (`.claude/`), Antigravity/Gemini (`.agents/`), OpenAI/Codex (`AGENTS.md`), and GitHub Copilot (`.github/copilot-instructions.md`). Hard links and junctions maintain full physical parity across all platforms.
 > - **For humans:** see [GUIDANCE.md](GUIDANCE.md) for the sitemap.
 

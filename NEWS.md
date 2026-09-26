@@ -7,7 +7,7 @@ Este arquivo documenta as mudanças importantes na estrutura, adiantamento de sk
 **A entrada anterior (`69c31a7`) partiu de um mal-entendido**, e o que ela fez foi desfeito. O autor não queria desativar o exportador nem as skills, e sim acabar com a obrigação de exportar ao fim de toda tarefa, que gera cópias repetidas da mesma conversa. Plano: `repo-governance/plan/2026-09-26_Plano_AGENTS_Enxutos_e_Export_Sob_Demanda.md` do `mancano-repo-hub` (issue #27 de lá). Como ficou:
 - `export-conversation` e `tools/export_conversa.R` voltaram ao original, e a skill ganhou o aviso "só quando o autor pedir";
 - na `close-task`, os passos 3 e 4 (inventário e export) passaram a ser **só se o autor pediu**;
-- a RULE 3 do `AGENTS.md`/`CLAUDE.md` passou de "MUST export" para "only when the author asks".
+- a RULE 3 do `AGENTS.md`/`CLAUDE.md` e do `.github/copilot-instructions.md` passou de "MUST export" para "only when the author asks" (o `copilot-instructions.md` num commit seguinte).
 
 **Metadados de Execução**:
 - **Data**: 2026-09-26
