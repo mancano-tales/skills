@@ -2,6 +2,19 @@
 
 Este arquivo documenta as mudanças importantes na estrutura, adiantamento de skills e convenções de governança do repositório `skills`.
 
+## 2026-09-26 — Correção: exportar conversa só quando o autor pedir
+
+**A entrada anterior (`69c31a7`) partiu de um mal-entendido**, e o que ela fez foi desfeito. O autor não queria desativar o exportador nem as skills, e sim acabar com a obrigação de exportar ao fim de toda tarefa, que gera cópias repetidas da mesma conversa. Plano: `repo-governance/plan/2026-09-26_Plano_AGENTS_Enxutos_e_Export_Sob_Demanda.md` do `mancano-repo-hub` (issue #27 de lá). Como ficou:
+- `export-conversation` e `tools/export_conversa.R` voltaram ao original, e a skill ganhou o aviso "só quando o autor pedir";
+- na `close-task`, os passos 3 e 4 (inventário e export) passaram a ser **só se o autor pediu**;
+- a RULE 3 do `AGENTS.md`/`CLAUDE.md` passou de "MUST export" para "only when the author asks".
+
+**Metadados de Execução**:
+- **Data**: 2026-09-26
+- **Agente**: Claude Code / Claude Opus 5.5 / Claude Code on the web
+- **Mensagem do Commit**: "docs(skills): exportar conversa so quando o autor pedir (corrige 69c31a7)"
+- **Arquivos afetados**: `.claude/skills/export-conversation/SKILL.md`, `.claude/skills/close-task/SKILL.md`, `AGENTS.md`, `CLAUDE.md`, `tools/export_conversa.R`, `NEWS.md`
+
 ## 2026-09-26 — Exportador de conversas descontinuado
 
 **Decisão do autor, no chat:** desabilitar o exportador de conversas em todos os repositórios. Plano: `repo-governance/plan/2026-09-26_Plano_Descontinuar_Exportador_Conversas.md` no `mancano-repo-hub` (issue #27 de lá). Mudanças aqui, que é a fonte das skills:

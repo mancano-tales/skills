@@ -3,7 +3,7 @@
 > 🚨 **CRITICAL AGENT RULES (COVENANT) — READ FIRST:**
 > - **RULE 1:** You are operating under the **Agent Covenant** framework. Every commit is audited. Run `Rscript tools/validate-governance.R` to test your edits before committing.
 > - **RULE 2:** Any modification in main files REQUIRES an update in the root `NEWS.md` file in the same commit.
-> - **RULE 3 (deprecated 2026-09-26):** Do NOT export conversations. The conversation exporter was deprecated ecosystem-wide by the author; `tools/export_conversa.R` refuses to run. Record the session in `NEWS.md`, the plan and the issue.
+> - **RULE 3 (changed 2026-09-26):** Export the conversation **only when the author asks** (`Rscript tools/export_conversa.R <session_uuid> [slug]`), once per session. Never on your own initiative or as an automatic end-of-task step: repeated exports of the same session become versioned junk.
 > - **RULE 4 (MULTI-AGENT INTEROPERABILITY):** This repository supports Claude Code (`.claude/`), Antigravity/Gemini (`.agents/`), OpenAI/Codex (`AGENTS.md`), and GitHub Copilot (`.github/copilot-instructions.md`). Hard links and junctions maintain full physical parity across all platforms.
 > - **For humans:** see [GUIDANCE.md](GUIDANCE.md) for the sitemap.
 
@@ -19,7 +19,7 @@
   - `.claude/skills/`: Diretório de skills ativas de governança e ferramentas (11 skills compartilhadas da matriz `agentic-research-template`).
   - `.agents`: Junction NTFS / Symlink apontando fisicamente para `.claude` (garante que IAs que buscam `.agents` acessem as mesmas skills sem duplicação de dados).
   - `0-meta/`: Scaffold de governança (`0-meta/plan/` para planos, `0-meta/llm-reviews/` para auditorias de conversas).
-  - `tools/`: Scripts de sincronização (`sync-skills.ps1`/`.sh`), exportação (`export_conversa.R`, descontinuado em 2026-09-26) e validação (`validate-governance.R`).
+  - `tools/`: Scripts de sincronização (`sync-skills.ps1`/`.sh`), exportação (`export_conversa.R`) e validação (`validate-governance.R`).
   - `hooks/`: Git Hooks (`post-merge`, `post-checkout`) para verificação automática de sincronização em segundo plano.
 - **Proibições Estritas (Standing Prohibitions)**:
   - Nunca execute `git add .` ou `git add -A`. Apenas adicione os arquivos específicos modificados (`git add <file>`).
@@ -66,5 +66,5 @@
 |---|---|---|
 | `diretorio_governanca` | todas as skills | `0-meta/` |
 | `diretorio_autoria_primaria` | `close-task`, `git-cleanup` | `skills/` |
-| `script_exportar_conversa` | — | — (descontinuado em 2026-09-26) |
+| `script_exportar_conversa` | `close-task`, `export-conversation` | `tools/export_conversa.R` |
 | `diretorios_trabalho_continuo` | `git-cleanup` | `0-meta/plan/` |
