@@ -2,6 +2,16 @@
 
 Este arquivo documenta as mudanças importantes na estrutura, adiantamento de skills e convenções de governança do repositório `skills`.
 
+## 2026-09-27 — Nova skill `review-pr` para revisão estruturada de Pull Requests
+
+Adiciona a skill `review-pr` (em `.claude/skills/` e `skills/`), cobrindo o workflow de revisão de Pull Requests no GitHub via GitHub CLI (`gh`). A skill executa a coleta automatizada de metadados, links e diffs, realiza análise crítica em dois eixos (Padrões/Governança e Especificação/Escopo baseada na metodologia do `code-review`), emite parecer padronizado para decisão humana de merge e fornece o protocolo de handoff com diretrizes de correção para agentes executores.
+
+**Metadados de Execução**:
+- **Data**: 2026-09-27
+- **Agente**: Antigravity / Gemini 3.8 Flash / Google Antigravity
+- **Mensagem do Commit**: "feat(skill): adiciona skill review-pr para revisao dual-axis via gh cli"
+- **Arquivos afetados**: `.claude/skills/review-pr/SKILL.md`, `skills/review-pr/SKILL.md`, `README.md`, `NEWS.md`
+
 ## 2026-09-26 — AGENTS.md único e enxuto; CLAUDE.md vira ponteiro
 
 Decisão do autor (plano `repo-governance/plan/2026-09-26_Plano_AGENTS_Enxutos_e_Export_Sob_Demanda.md` do `mancano-repo-hub` (issue #27 de lá)). O `AGENTS.md` foi reescrito (70 → 43 linhas); o `CLAUDE.md` agora é só `@AGENTS.md` e o `.github/copilot-instructions.md` só aponta para o `AGENTS.md`.
