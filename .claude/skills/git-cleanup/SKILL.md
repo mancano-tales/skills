@@ -1,6 +1,6 @@
 ---
 name: git-cleanup
-description: Limpa pendências acumuladas de `git status` num repositório multiagente — inventaria, agrupa por assunto, entra em modo plano fazendo perguntas objetivas sobre como organizar os commits, e só então executa commits temáticos com staging explícito, checkpoints de governança e documentação sincronizada (NEWS.md, inventário de llm-reviews). Consulta `CLAUDE.md` § "Configuração de Skills" para as particularidades deste repositório (diretório de autoria protegida, arquivo gerenciado externamente, pastas de trabalho contínuo).
+description: Limpa pendências acumuladas de `git status` num repositório multiagente — inventaria, agrupa por assunto, entra em modo plano fazendo perguntas objetivas sobre como organizar os commits, e só então executa commits temáticos com staging explícito, checkpoints de governança e documentação sincronizada (porquê no corpo do commit com trailer Agent:, inventário de llm-reviews). Consulta `CLAUDE.md` § "Configuração de Skills" para as particularidades deste repositório (diretório de autoria protegida, arquivo gerenciado externamente, pastas de trabalho contínuo).
 ---
 
 # Limpar pendências de `git status`
@@ -29,7 +29,7 @@ Rode `git status --short` você mesmo, agora. Nunca reutilize um inventário de 
 Agrupe os itens do inventário por assunto lógico, não por "tudo junto". Padrões a considerar:
 
 1. Uma série de scripts/arquivos dentro de uma pasta listada em `diretorios_trabalho_continuo` (`CLAUDE.md` § "Configuração de Skills") que forma um trabalho contínuo (mesmo prefixo, mesma pasta de análise).
-2. Ferramentas novas em `tools/` — sempre precisam de entrada em `NEWS.md` (Regra 2 do `CLAUDE.md`: qualquer mudança relevante em código exige log; por analogia e pela "Synchronized Commit Policy", `tools/` recebe o mesmo tratamento das pastas de trabalho contínuo).
+2. Ferramentas novas em `tools/` — commit próprio, com o porquê no corpo da mensagem (o `NEWS.md` foi aposentado; não o crie nem edite).
 3. Scripts arquivados (ex.: uma pasta `old-scripts/`) — podem entrar sozinhos ou junto do item 2, com nota do porquê.
 4. Exports de conversa em `9-vers/llm-reviews/*.md` — **sempre exigem uma linha na tabela `## Inventário` de `9-vers/llm-reviews/README.md` antes de comitar**, no mesmo commit.
 5. O arquivo da chave `arquivo_gerenciado_externamente`, se preenchida — **sempre commit próprio, nunca misturado com mais nada** (ver passo 5).
@@ -52,7 +52,7 @@ Para qualquer arquivo que você não escreveu nesta conversa: dê uma olhada rá
 Para cada grupo confirmado no passo 2, **nesta ordem**:
 
 1. `git status --short` de novo — não presuma que o índice está vazio; outro agente pode ter deixado algo staged que não é seu.
-2. Se o grupo exige `NEWS.md` (regra 2 do `CLAUDE.md`): escreva/prepend a entrada agora, formato `## YYYY-MM-DD HH:MM (N) — Título` (fuso horário local do repositório — ver convenção no topo do próprio `NEWS.md`), terminando com o bloco **Metadados de Execução** (Data/Hora, Agente, Mensagem do Commit, Arquivos afetados).
+2. Redija a mensagem do commit do grupo: registre no **corpo do commit** o porquê (um parágrafo curto), termine a mensagem com o trailer `Agent: <harness> / <modelo> / <plataforma>` (e `Refs: #N` se houver issue), e comente `kind: result` na issue do plano com o resumo. O `NEWS.md` foi aposentado (hub, issue #37): não crie, não edite e não recrie `NEWS.md` nem fragmentos.
 3. Se o grupo inclui export(s) novo(s) de `9-vers/llm-reviews/`: registre cada um na tabela `## Inventário` do `README.md` dessa pasta, no mesmo grupo.
 4. `git add <caminho1> <caminho2> ...` — caminhos explícitos, um por um. **Nunca `git add .` nem `git add -A`.**
 5. `Rscript tools/validate-governance.R` (sem `--sync`) como checkpoint. Trate os achados:
@@ -60,11 +60,11 @@ Para cada grupo confirmado no passo 2, **nesta ordem**:
    - **Styler não-conforme** (aviso, não bloqueia): rode `styler::style_file()` nos arquivos apontados, confirme com um teste rápido (`source()`/rodar o script) que nada quebrou, re-stage.
    - **Divergência de status YAML×README de plano**, ou **plano concluído sem log de conversa vinculado**: corrija o campo específico que a mensagem de erro aponta (`status`, `relacionados`) antes de prosseguir — não são erros genéricos, o validador diz exatamente o que está errado.
 6. Confirme `git status --short` mostrando **só** os arquivos deste grupo como staged.
-7. `git commit -- <caminho1> <caminho2> ...` (pathspec explícito — nunca `-a`, nunca um `git commit` simples confiando num índice pré-populado por você ou por outro processo). Mensagem no padrão Conventional Commits + `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`.
+7. `git commit -- <caminho1> <caminho2> ...` (pathspec explícito — nunca `-a`, nunca um `git commit` simples confiando num índice pré-populado por você ou por outro processo). Mensagem no padrão Conventional Commits, porquê no corpo, trailer `Agent: <harness> / <modelo> / <plataforma>` (o hook `commit-msg` recusa sem ele) + `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`.
 
 ## Passo 5 — Casos especiais
 
-- **Arquivo da chave `arquivo_gerenciado_externamente`** (se preenchida): nunca editar o conteúdo — é gerenciado por uma ferramenta externa (ver a descrição da chave no `CLAUDE.md` deste repositório para qual ferramenta e por quê). Comitar um arquivo que você não editou é seguro (git não distingue quem escreveu os bytes); o risco real é pegar uma exportação/geração pela metade. Antes de comitar: confira que o arquivo termina bem-formado para o seu formato (ex.: `}` fechado no lugar certo para `.bib`/JSON, não truncado no meio de um campo). Comite **sozinho, em commit próprio**, nunca junto com mais nada. Não é preciso perguntar ao autor — só checar que não está truncado. Não precisa de entrada em `NEWS.md` (conteúdo não é decisão de agente).
+- **Arquivo da chave `arquivo_gerenciado_externamente`** (se preenchida): nunca editar o conteúdo — é gerenciado por uma ferramenta externa (ver a descrição da chave no `CLAUDE.md` deste repositório para qual ferramenta e por quê). Comitar um arquivo que você não editou é seguro (git não distingue quem escreveu os bytes); o risco real é pegar uma exportação/geração pela metade. Antes de comitar: confira que o arquivo termina bem-formado para o seu formato (ex.: `}` fechado no lugar certo para `.bib`/JSON, não truncado no meio de um campo). Comite **sozinho, em commit próprio**, nunca junto com mais nada. Não é preciso perguntar ao autor — só checar que não está truncado.
 - **`.git/index.lock`**: se o git acusar que o lock existe, espere ~3-5s e tente de novo, no máximo 3 vezes (~15s total). Se persistir, **pare e avise o autor** — nunca apague o lock sozinho; um lock órfão parece idêntico a um ativo do ponto de vista do agente.
 - **Arquivos dentro de `diretorio_autoria_primaria`**: fora do commit por padrão (variante "sem autoria primária"). Só entram na variante "com autoria primária", arquivo por arquivo autorizado no passo 2.
 

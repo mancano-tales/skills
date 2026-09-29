@@ -1,7 +1,7 @@
 ﻿---
 autor: "Tales Mançano / Ecossistema"
 name: close-task
-description: Cerimônia completa de encerramento de tarefa. Executa todo o workflow de auditoria: marca planos como concluídos, escreve no NEWS.md, faz o commit seguro e, só se o autor pedir, atualiza o inventário de logs e exporta a conversa. Só rodar uma vez no final definitivo da sessão.
+description: Cerimônia completa de encerramento de tarefa. Executa todo o workflow de auditoria: marca planos como concluídos, faz o commit seguro (porquê no corpo, trailer Agent:), comenta kind: result na issue do plano e, só se o autor pedir, atualiza o inventário de logs e exporta a conversa. Só rodar uma vez no final definitivo da sessão.
 ---
 
 # Cerimônia de Encerramento (Close Task)
@@ -17,23 +17,13 @@ Siga OS PASSOS ABAIXO EXATAMENTE NESTA ORDEM:
 ## 1. Marcar o Plano como Concluído
 - Localize o plano ativo (em `9-vers/plan/`) que originou a tarefa. Se houver mais de um, pergunte ao usuário qual deve ser finalizado.
 - Use ferramentas de edição (e.g. replace_file_content) para mudar `status: "EM EXECUÇÃO"` (ou `"ATIVO"`) para `status: "CONCLUÍDO"`.
-- Adicione a chave `concluido: "YYYY-MM-DD HH:MM"` (data **e hora**, no seu fuso horário local — ver "Convenção de timestamp" no topo do `NEWS.md`) logo abaixo da chave `criado`, respeitando **exatamente** a indentação já usada por `criado` na mesma linha/nível — não invente indentação nova.
+- Adicione a chave `concluido: "YYYY-MM-DD"` (**só a data**; a hora exata é a do commit) logo abaixo da chave `criado`, respeitando **exatamente** a indentação já usada por `criado` na mesma linha/nível — não invente indentação nova.
 - Adicione no array `relacionados` o nome ou identificador do log de conversa que será gerado no passo 4 (se houver exportação).
 - **Checkpoint obrigatório**: assim que terminar esta edição, rode `Rscript tools/validate-governance.R` (sem `--sync`) antes de prosseguir para o passo 2. O parser YAML deste repositório já teve bugs reais de indentação/aspas passarem despercebidos até o commit; rodar o validador aqui pega corrupção de YAML imediatamente, com o arquivo ainda fácil de corrigir, em vez de só no passo 5.
 
-## 2. Escrever no NEWS.md
-- Abra o `NEWS.md` na raiz.
-- Adicione uma entrada com cabeçalho `## YYYY-MM-DD HH:MM — Título` (data e hora reais, no fuso local — nunca só a data; ver convenção no topo do arquivo) relatando resumidamente o que foi feito nesta sessão (decisões, códigos alterados, bugs corrigidos).
-- **Obrigatório**: encerre a entrada com o bloco de **Metadados de Execução** exigido pelo `CLAUDE.md` § "Synchronized Commit Policy":
-  ```markdown
-  **Metadados de Execução**:
-  - **Data/Hora**: YYYY-MM-DD HH:MM (Horário Local)
-  - **Agente**: <seu nome/plataforma> / <modelo> / <ambiente de execução>
-  - **Mensagem do Commit**: "<mesma mensagem que você vai usar no passo 6>"
-  - **Arquivos afetados**: <lista dos arquivos que você vai stagear no passo 5>
-  ```
-  Uma entrada sem esse bloco, ou com timestamp só-data, não está em conformidade — `validate-governance.R` hoje não bloqueia isso automaticamente, então a responsabilidade é sua.
-- **Lembrete da Governança**: Nunca altere ou reescreva entradas antigas. Apenas adicione conteúdo novo (append) no topo do log de mudanças ou na seção da data de hoje.
+## 2. Registrar o que foi feito (commit + issue)
+- O registro mora no git e no GitHub: registre no **corpo do commit** o porquê (um parágrafo curto), termine a mensagem com o trailer `Agent: <harness> / <modelo> / <plataforma>` (e `Refs: #N` se houver issue), e comente `kind: result` na issue do plano com o resumo. O `NEWS.md` foi aposentado (hub, issue #37): não crie, não edite e não recrie `NEWS.md` nem fragmentos.
+- Redija agora o resumo da sessão (decisões, código alterado, bugs corrigidos): ele vira o corpo do commit do passo 6 e o comentário `kind: result` (com `sessao:`, `modelo:`, `esforco:`) na issue do plano, feito depois do push.
 
 ## 3. Atualizar o Inventário de Logs (só se o autor pediu a exportação)
 - Abra o arquivo `9-vers/llm-reviews/README.md`.
@@ -54,7 +44,7 @@ Siga OS PASSOS ABAIXO EXATAMENTE NESTA ORDEM:
 - O script vai gerar o arquivo Markdown na pasta `9-vers/llm-reviews/` e imprimir o caminho absoluto no terminal. Verifique se o nome do arquivo gerado coincide com o que você registrou no inventário no Passo 3. Se não, corrija o inventário.
 
 ## 5. Validação e Sincronização
-- **NUNCA use `git add .` ou `git add -A`** — proibido pelo `CLAUDE.md` § "Strict Staging Policy". Faça `git status` e stage **explicitamente, arquivo por arquivo**, apenas: (a) o plano editado no passo 1; (b) `NEWS.md` editado no passo 2; (c) `9-vers/llm-reviews/README.md` editado no passo 3; (d) o log de conversa exportado no passo 4 (c e d só se houve exportação); (e) qualquer arquivo de código/script/figura que você mesmo editou como parte desta tarefa (você já sabe quais são — enumere-os, não adivinhe pelo `git status`).
+- **NUNCA use `git add .` ou `git add -A`** — proibido pelo `CLAUDE.md` § "Strict Staging Policy". Faça `git status` e stage **explicitamente, arquivo por arquivo**, apenas: (a) o plano editado no passo 1; (c) `9-vers/llm-reviews/README.md` editado no passo 3; (d) o log de conversa exportado no passo 4 (c e d só se houve exportação); (e) qualquer arquivo de código/script/figura que você mesmo editou como parte desta tarefa (você já sabe quais são — enumere-os, não adivinhe pelo `git status`).
   ```bash
   git add <caminho1> <caminho2> ...
   ```
@@ -68,7 +58,7 @@ Siga OS PASSOS ABAIXO EXATAMENTE NESTA ORDEM:
 ## 6. Commit (Tratamento de Concorrência)
 - Faça o commit das alterações **só com os arquivos stageados no passo 5** (nunca `git commit -a`), formatando a mensagem:
   ```bash
-  git commit -m "chore: <assunto-ou-slug-da-tarefa>"
+  git commit -m "chore: <assunto-ou-slug-da-tarefa> refs #N" -m "<porquê, um parágrafo>" -m "Agent: <harness> / <modelo> / <plataforma>"
   ```
 - O hook `pre-commit` roda `Rscript tools/validate-governance.R` (T1-T6) neste momento. Se ele bloquear o commit, corrija o problema apontado — não contorne com `--no-verify` sem autorização explícita do usuário nesta conversa.
 - **Tratamento de Concorrência e Index.Lock**: como trabalhamos num ecossistema multiagente, o Git pode acusar que `.git/index.lock` já existe. Isso **não é um erro lógico ou sintático** — só significa que outro processo git está em andamento. Trate assim, com limite:

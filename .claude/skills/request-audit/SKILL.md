@@ -61,8 +61,8 @@ O seu prompt deve instruir o auditor a retornar a análise estruturada com as se
 O seu prompt deve instruir explicitamente:
 > *"Se o veredito for `[REQUER REFATORAÇÃO MENOR]` ou `[REQUER REFATORAÇÃO ESTRUTURAL]`, o agente executor deve corrigir os itens e pode pedir **no máximo mais uma rodada** de auditoria independente. Se a segunda rodada também resultar em `[REQUER REFATORAÇÃO ESTRUTURAL]` ou `[DESCARTADO]`, o agente executor PARA e escala a decisão ao autor humano em vez de iniciar uma terceira rodada de auditoria sozinho — sem isso, o ciclo de auditoria cruzada entre agentes pode continuar indefinidamente, gastando tempo e tokens sem convergir. Uma autoauditoria do próprio agente autor (em vez de um agente independente) nunca conta como uma dessas rodadas."*
 
-## 4. Registro no `NEWS.md`
-Se a criação ou alteração desta skill (ou de qualquer skill em `.claude/skills/`) for o próprio objeto da tarefa, ela segue a Synchronized Commit Policy do `CLAUDE.md` como qualquer outra mudança de governança: precisa de entrada em `NEWS.md` com o bloco de Metadados de Execução, no mesmo commit.
+## 4. Registro
+Se a criação ou alteração desta skill (ou de qualquer skill em `.claude/skills/`) for o próprio objeto da tarefa, registre no **corpo do commit** o porquê (um parágrafo curto), termine a mensagem com o trailer `Agent: <harness> / <modelo> / <plataforma>` (e `Refs: #N` se houver issue), e comente `kind: result` na issue do plano com o resumo. O `NEWS.md` foi aposentado (hub, issue #37): não crie, não edite e não recrie `NEWS.md` nem fragmentos.
 
 ## 5. Entrega e Versionamento
 
