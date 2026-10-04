@@ -1,4 +1,4 @@
-﻿# 🚀 Skills Repository
+# 🚀 Skills Repository
 
 Repositório central de **Skills customizadas** e de governança para assistentes de IA (Antigravity, Claude Code, OpenAI, Gemini).
 
@@ -125,6 +125,7 @@ Contém a coleção completa de **101 skills** salvas e ativas: suíte de superp
 | [**$(git-cleanup.Name)**](./.claude/skills/git-cleanup/SKILL.md) | Limpa pendências acumuladas de `git status` num repositório multiagente — inventaria, agrupa por assunto, entra em mo... | Tales Mançano / Ecossistema |
 | [**$(pdf-text-extractor.Name)**](./.claude/skills/pdf-text-extractor/SKILL.md) | Automatically extracts plain text and markdown content from PDF files in the workspace or local drives, saving them a... | Tales Mançano / Ecossistema |
 | [**$(request-audit.Name)**](./.claude/skills/request-audit/SKILL.md) | Gera um prompt estruturado de auditoria (Red-Teaming) para ser entregue a um agente independente, e salva esse prompt... | Tales Mançano / Ecossistema |
+| [**$(review-pr.Name)**](./.claude/skills/review-pr/SKILL.md) | Revisa Pull Requests no GitHub usando a GitHub CLI (gh) e a metodologia dual-axis (Padrões e Especificação)... | Tales Mançano / Ecossistema |
 | [**$(sync-skills.Name)**](./.claude/skills/sync-skills/SKILL.md) | SOP para trazer skills de governança atualizadas do repositório mãe (agentic-research-template) para este projeto, ou... | Tales Mançano / Ecossistema |
 | [**$(tts-html-builder.Name)**](./.claude/skills/tts-html-builder/SKILL.md) | Converte resumos, artigos e documentos em páginas HTML ou arquivos Quarto (.qmd) limpos e elegantes otimizados para l... | Tales Mançano / Ecossistema |
 
