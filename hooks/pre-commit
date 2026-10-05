@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Delega às travas comuns do ecossistema (hub mancano-repo-hub, tools/git-hooks/pre-commit).
+# Os outros hooks deste repo (post-checkout, post-merge) sincronizam skills e continuam como estão.
+exec bash tools/git-hooks/pre-commit "$@"
