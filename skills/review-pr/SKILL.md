@@ -1,19 +1,19 @@
 ---
 autor: "Tales Mançano / Ecossistema"
 name: review-pr
-description: Revisa Pull Requests no GitHub usando a GitHub CLI (gh) e a metodologia dual-axis (Padrões e Especificação). Extrai diff e metadados via gh CLI, avalia conformidade com a issue/plano de origem, checa governança local (AGENTS.md) e entrega parecer estruturado com link do GitHub para decisão humana de merge. Use quando o usuário pedir para revisar um PR, avaliar pull requests abertos ou preparar parecer de PR antes do merge.
+description: Revisa Pull Requests no GitHub usando a GitHub CLI (gh) e a metodologia dual-axis (Padrões e Especificação). Extrai diff e metadados via gh CLI, avalia conformidade com a issue/plano de origem, checa governança local (AGENTS.md) e entrega parecer estruturado com link do GitHub para a decisão de merge. Use quando o usuário pedir para revisar um PR, avaliar pull requests abertos ou preparar parecer de PR antes do merge.
 ---
 
 # review-pr — Revisão Estruturada de Pull Requests via GitHub CLI e Dual-Axis
 
-Esta skill implementa o fluxo de revisão independente de Pull Requests no GitHub, combinando a extração via GitHub CLI (`gh`), a avaliação técnica em dois eixos (Padrões e Especificação) inspirada no `code-review`, a checagem de conformidade com a governança local (`AGENTS.md`) e um protocolo de handoff para que outro agente executor aplique correções antes do merge final pelo autor humano.
+Esta skill implementa o fluxo de revisão independente de Pull Requests no GitHub, combinando a extração via GitHub CLI (`gh`), a avaliação técnica em dois eixos (Padrões e Especificação) inspirada no `code-review`, a checagem de conformidade com a governança local (`AGENTS.md`) e um protocolo de handoff para que outro agente executor aplique correções antes do merge.
 
 ---
 
 ## 1. Princípios Operacionais
 
 - **Maker vs. Checker**: O agente revisor atua com postura estritamente analítica e cética. Ele nunca altera o código na mesma etapa em que revisa.
-- **Autoridade Final e Governança**: Conforme o `AGENTS.md` (§3), **o agente revisa e emite o parecer; apenas o autor humano realiza o merge**.
+- **Autoridade Final e Governança**: o agente revisa e emite o parecer; **quem pode mergear é o que o `AGENTS.md` do repositório define**. No ecossistema do autor, o agente mergeia quando o autor pede no chat, ou com checks verdes e revisão de outro harness sem achado bloqueante. **Quem escreveu o PR não o revisa** (PR do Claude é revisado pelo Codex, e vice-versa).
 - **Agilidade e Rastreabilidade**: Uso intensivo da GitHub CLI (`gh`) para dispensar navegação manual na interface web, garantindo links diretos, diffs precisos e histórico auditável.
 
 ---
@@ -48,7 +48,7 @@ Identifique:
 - **Branch Base vs. Head**: Base (ex.: `main`) e Head (ex.: `feat/...` ou `claude/...`).
 - **Especificação / Contexto de Origem**: Busque referências na descrição (`body`) e nos commits:
   - Issues vinculadas: `refs #<id>`, `Closes #<id>`, `Fixes #<id>`.
-  - Planos de governança: `repo-governance/plan/YYYY-MM-DD_Plano_*.md` ou `0-meta/plan/`.
+  - Planos (opcionais em boa parte dos repositórios): na pasta declarada no `AGENTS.md` (chave `diretorio_governanca`; por exemplo `repo-governance/plan/` ou `docs/plans/`).
   - Se houver issue associada, consulte seu conteúdo com `gh issue view <id>`.
 
 ---
@@ -80,7 +80,7 @@ A análise deve ser conduzida separando estritamente os dois eixos para evitar q
    - Os commits seguem Conventional Commits (se adotado no repositório)?
 2. **Regras Invioláveis de Governança Local**:
    - **Caminhos absolutos**: Proibição estrita de caminhos absolutos de máquina (ex.: `C:/Users/...`, `.../MancanoSync/...`). Apenas caminhos relativos ou variáveis de ambiente/configuração.
-   - **Integridade Documental**: Se alterou governança ou estrutura, o `NEWS.md` foi atualizado no mesmo commit com bloco de metadados?
+   - **Registro**: commits em Conventional Commits, com o trailer `Agent:` e `refs #N` quando houver issue. Se o `AGENTS.md` do repositório ainda exigir `NEWS.md`, ele foi atualizado no mesmo commit? Onde o `NEWS.md` foi aposentado, o PR não pode criá-lo nem editá-lo.
    - **Staging cirúrgico**: Nenhum arquivo temporário, log desnecessário ou arquivo de sistema (`desktop.ini`, `.DS_Store`) introduzido.
 3. **Smell Baseline (Heurísticas de Qualidade)**:
    - *Mysterious Name*: nomes de funções, variáveis ou arquivos que não revelam intenção.
@@ -142,7 +142,7 @@ Apresente o resultado no seguinte formato padronizado:
 - [ ] **REQUER AJUSTES**: Pendências identificadas que devem ser corrigidas antes do merge.
 
 ### Próximos Passos Sugeridos:
-- Se aprovado: O autor humano pode proceder com o merge via web ou `gh pr merge <numero>`.
+- Se aprovado: o merge segue a autorização do `AGENTS.md` (autor no chat, ou checks verdes e revisão de outro harness sem achado bloqueante), via web ou `gh pr merge <numero>`.
 - Se ajustes necessários: Repassar o bloco de diretrizes abaixo para o agente executor na branch.
 ```
 
@@ -177,4 +177,4 @@ Se o usuário solicitar registrar o feedback no GitHub:
 gh pr review <numero> --comment -b "<conteúdo resumido do parecer>"
 ```
 
-> **Lembrete de Governança**: O agente **nunca** executa `gh pr merge`. O merge é prerrogativa exclusiva do autor.
+> **Lembrete de Governança**: esta skill só revisa. Mergear é outra etapa, que segue a autorização do `AGENTS.md` do repositório; na dúvida, pergunte ao autor.
