@@ -57,7 +57,7 @@
 <!-- END governanca-comum -->
 
 
-Contexto operacional para agentes de IA. É o **único** arquivo de instruções: o `CLAUDE.md` contém só `@AGENTS.md` e o `.github/copilot-instructions.md` só aponta para cá. Para humanos: `README.md` e `GUIDANCE.md`. A história está no `NEWS.md`.
+Contexto operacional para agentes de IA. É o **único** arquivo de instruções: o `CLAUDE.md` contém só `@AGENTS.md` e o `.github/copilot-instructions.md` só aponta para cá. Para humanos: `README.md` e `GUIDANCE.md`. A história está no git (commits e PRs).
 
 ## 1. O que é
 
@@ -77,15 +77,8 @@ Fonte das skills do ecossistema do autor, para Claude Code, Codex, Gemini/Antigr
 ## 3. Regras
 
 - **Staging cirúrgico**: `git add <arquivo>`; nunca `git add .`/`-A`.
-- **Co-commit**: toda mudança leva a entrada no `NEWS.md` no mesmo commit (cabeçalho `## YYYY-MM-DD — Título`, só a data), terminando com:
-  ```markdown
-  **Metadados de Execução**:
-  - **Data**: YYYY-MM-DD
-  - **Agente**: [Nome] / [Modelo] / [Plataforma]
-  - **Mensagem do Commit**: "..."
-  - **Arquivos afetados**: ...
-  ```
-- **Skills genéricas não hardcodeiam nada** do repo que as usa: valores específicos vêm da seção "Configuração de Skills" do `AGENTS.md` de cada consumidor. Mudou a interface (uma chave nova), avise no `NEWS.md` e no `README.md`.
+- **Registro**: o que mudou e por quê vai no commit (Conventional Commits, corpo com o porquê, trailer `Agent:`), como no resto do ecossistema; o `NEWS.md` foi aposentado (ver o bloco comum acima).
+- **Skills genéricas não hardcodeiam nada** do repo que as usa: valores específicos vêm da seção "Configuração de Skills" do `AGENTS.md` de cada consumidor. Mudou a interface (uma chave nova), avise no `README.md` e no corpo do commit.
 - **Skills portadas de terceiros** (ex. [mattpocock/skills](https://github.com/mattpocock/skills)) ficam fiéis ao original, com a licença e a origem no `README.md`.
 - **Exportar conversa só quando o autor pedir**, uma vez por sessão (nunca ao fim de toda tarefa): `Rscript tools/export_conversa.R <session_uuid> [slug]`.
 - Validar antes de commitar: `Rscript tools/validate-governance.R`.
